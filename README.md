@@ -1,20 +1,4 @@
 
-<h1 align="center">
-	Social Media App (Socials) - React Native
-</h1>
-
-
-https://github.com/user-attachments/assets/8862b1be-b04a-4286-bf58-783840ca72c8
-
-
-<h1 align="center">
-	ScreenShots
-</h1>
-<p align="center">
-	<img src="https://github.com/ShahrozAtiq/Social-Media-App/blob/main/1.jpg">
-	<img src="https://github.com/ShahrozAtiq/Social-Media-App/blob/main/2.jpg">
-</p>
-
 
 ## Discription
 Welcome to the frontend repository of our Social Media App, built entirely using React Native. This project aims to provide a seamless, intuitive, and visually appealing mobile experience, featuring a collection of essential social media functionalities. The app is designed with modern animations to enhance user interactions and engagement.
