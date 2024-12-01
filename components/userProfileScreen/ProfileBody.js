@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   ActivityIndicator,
   Pressable,
   Image,
@@ -11,7 +10,6 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { GlobalStyles } from "../../constants/Styles.js";
 import { FlatList } from "react-native-gesture-handler";
 import CollectionCard from "./CollectionCard.js";
-
 import React, { useState, useEffect, useContext } from "react";
 import Post from "../../components/userProfileScreen/Post";
 import { AuthContext } from "../../store/auth-context";
@@ -27,10 +25,10 @@ function Posts({ navigation, route, refreshing }) {
   const [fetching, setFetching] = useState(true);
   const [errorFetching, setErrorFetching] = useState(false);
   const [posts, setPosts] = useState([]);
+
   const getPosts = async () => {
     try {
       setFetching(true);
-
       setErrorFetching(false);
       setPosts(POSTS);
     } catch (error) {
@@ -39,15 +37,18 @@ function Posts({ navigation, route, refreshing }) {
     }
     setFetching(false);
   };
+
   useEffect(() => {
     getPosts();
   }, []);
+
   useEffect(() => {
     if (refreshing) {
       console.log("refreshing");
       getPosts();
     }
   }, [refreshing]);
+
   return (
     <View style={{ flex: 1, backgroundColor: GlobalStyles.colors.primary }}>
       {fetching ? (
@@ -74,44 +75,25 @@ function Posts({ navigation, route, refreshing }) {
           </Pressable>
         </View>
       ) : posts.length > 0 ? (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View
-            style={{
-              flexDirection: "row",
-              margin: 5,
-              marginBottom: GlobalStyles.styles.tabBarPadding,
-            }}
-          >
-            <View style={{ flex: 1 }}>
-              {posts.map((item, index) => (
-                <View key={index}>
-                  {index % 2 === 0 && <Post postData={posts[index]} />}
-                </View>
-              ))}
+        <FlatList
+          data={posts}
+          keyExtractor={(item, index) => index.toString()}
+          numColumns={3} // Ba cột cho bố cục giống Instagram
+          contentContainerStyle={styles.flatListContainer}
+          columnWrapperStyle={({ index }) => ({
+            justifyContent: index % 3 === 0 ? "flex-start" : "space-between", // Đảm bảo các bài đăng căn đúng
+          })}
+          renderItem={({ item }) => (
+            <View style={styles.postContainer}>
+              <Post postData={item} />
             </View>
-            <View style={{ flex: 1 }}>
-              {posts.map((item, index) => (
-                <View key={index}>
-                  {index % 2 !== 0 && <Post postData={posts[index]} />}
-                </View>
-              ))}
-            </View>
-          </View>
-        </ScrollView>
+          )}
+        />
       ) : (
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <View style={styles.noPostsContainer}>
           <Image
             source={require("../../assets/no-photo.jpg")}
-            style={{
-              width: 300,
-              height: 300,
-              resizeMode: "contain",
-            }}
+            style={styles.noPostsImage}
           />
         </View>
       )}
@@ -132,17 +114,16 @@ function Videos() {
         keyExtractor={(data, index) => index.toString()}
         data={[1, 2, 3, 4, 5, 6]}
         numColumns={2}
-        renderItem={({ data, index }) => {
-          return (
-            <View>
-              <CollectionCard />
-            </View>
-          );
-        }}
+        renderItem={({ data, index }) => (
+          <View>
+            <CollectionCard />
+          </View>
+        )}
       />
     </View>
   );
 }
+
 const ProfileBody = ({ refreshing }) => {
   return (
     <TopTab.Navigator
@@ -175,12 +156,7 @@ const ProfileBody = ({ refreshing }) => {
         tabBarPressColor: "white",
       }}
     >
-      <TopTab.Screen
-        name="Posts"
-        options={{
-          title: "Images",
-        }}
-      >
+      <TopTab.Screen name="Posts" options={{ title: "Images" }}>
         {({ navigation, route }) => (
           <Posts
             navigation={navigation}
@@ -189,12 +165,7 @@ const ProfileBody = ({ refreshing }) => {
           />
         )}
       </TopTab.Screen>
-      <TopTab.Screen
-        name="Videos"
-        options={{
-          title: "VIDS",
-        }}
-      >
+      <TopTab.Screen name="Videos" options={{ title: "VIDS" }}>
         {({ navigation, route }) => (
           <Videos
             navigation={navigation}
@@ -209,4 +180,29 @@ const ProfileBody = ({ refreshing }) => {
 
 export default ProfileBody;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  flatListContainer: {
+    padding: 10,
+    marginBottom: GlobalStyles.styles.tabBarPadding,
+  },
+  columnWrapper: {
+    justifyContent: "space-between",
+  },
+  postContainer: {
+    width: "31%",
+    aspectRatio: 1,
+    margin: 5,
+    overflow: "hidden",
+    backgroundColor: GlobalStyles.colors.background,
+  },
+  noPostsContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noPostsImage: {
+    width: "100%",
+    height: "100%",
+    aspectRatio: 1,
+    resizeMode: "cover",
+  },
+});
