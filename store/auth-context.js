@@ -11,14 +11,27 @@ export const AuthContext = createContext({
 });
 
 function AuthContentProvider({ children }) {
-  const [userData, setUserData] = useState(USER_DATA[0]);
+  //lấy userData lúc nhập
+  const [userData, setUserData] = useState(null); 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  function authenticate(userData) {
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      const token = await AsyncStorage.getItem("token"); 
+      if (token) {
+        setIsAuthenticated(true); // Nếu có token, xác thực người dùng
+      }
+    };
+    checkAuthStatus();
+  }, []);
+
+  // Hàm xác thực: Lưu token vào AsyncStorage và cập nhật context
+  const authenticate = async (userData) => {
     setIsAuthenticated(true);
-    console.log(userData);
-    // setUserData(userData);
-    // AsyncStorage.setItem("userData", JSON.stringify(userData));
-  }
+    setUserData(userData); 
+
+    await AsyncStorage.setItem("token", userData.jwt); 
+    await AsyncStorage.setItem("userData", JSON.stringify(userData)); 
+  };
   function logout() {
     setUserData(null);
     AsyncStorage.removeItem("userData");

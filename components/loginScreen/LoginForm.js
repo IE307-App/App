@@ -4,26 +4,47 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Formik } from "formik";
 import * as yup from "yup";
 import Validator from "email-validator";
-
+import axios from 'axios';
 import Button from "../Button";
 import InputField from "../InputField";
 import { GlobalStyles } from "../../constants/Styles";
 import { AuthContext } from "../../store/auth-context";
-
+import { serverLink } from "../../constants/server";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const ApiUrl = serverLink ;
 const LoginForm = ({ navigation }) => {
   const authCtx = useContext(AuthContext);
 
   const LoginFormSchema = yup.object().shape({
     email: yup.string().email().required("Email address is required."),
-    password: yup.string().min(8, "Password must have a tleast 8 chracters."),
+    password: yup.string().min(5, "Password must have a tleast 5 chracters."),
   });
 
   async function onLogin(email, password) {
     try {
-      authCtx.authenticate();
-      console.log("Response data:", response.data);
+      const response = await axios.post(ApiUrl + "/auth/signin", {
+        email,
+        password,
+      });
+  
+      if (response.data.status) {
+        const jwt = response.data.jwt;
+        await AsyncStorage.setItem("token", jwt);
+        const responseUserData = await axios.get(ApiUrl+"/api/users/profile", {
+          jwt,
+          headers: {
+            Authorization: `Bearer ${jwt}`, // Thêm JWT vào header
+          }
+        });
+        // Đăng nhập thành công
+          authCtx.authenticate(responseUserData.data); // Gọi hàm authenticate từ context và truyền dữ liệu trả về
+        console.log("Response data:", responseUserData.data);
+      } else {
+        Alert.alert("Login failed", "Invalid credentials");
+      }
     } catch (error) {
-      Alert.alert("ERROR", error.response.data.msg);
+      console.error("Login error:", error);
+      Alert.alert("ERROR", error.response ? error.response.data.msg : "An error occurred");
     }
   }
 

@@ -1,1 +1,1 @@
-export const serverLink = "http://192.168.10.4:3001/";
+export const serverLink = "http://10.0.2.2:5454";
