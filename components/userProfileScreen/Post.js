@@ -10,8 +10,9 @@ const { height, width } = Dimensions.get("window");
 const Post = ({ postData }) => {
   const navigation = useNavigation();
   const [showPost, setShowPost] = useState(false);
+
   return (
-    <View>
+    <View style={styles.container}>
       <Modal
         animationType="fade"
         transparent={true}
@@ -23,13 +24,9 @@ const Post = ({ postData }) => {
       >
         <Pressable
           onPress={() => setShowPost(false)}
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            backgroundColor: "rgba(0,0,0,0.5)",
-          }}
+          style={styles.modalOverlay}
         >
-          <View>
+          <View style={styles.modalContent}>
             <MainPost post={postData} />
           </View>
         </Pressable>
@@ -39,7 +36,7 @@ const Post = ({ postData }) => {
         onPress={() => {
           setShowPost(true);
         }}
-        style={{ margin: 5 }}
+        style={styles.pressablePost}
       >
         <RemoteImage imageUri={postData.picturePath} />
       </Pressable>
@@ -49,4 +46,23 @@ const Post = ({ postData }) => {
 
 export default Post;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    margin: 0,
+  },
+  pressablePost: {
+    borderRadius: 0,
+    overflow: "hidden",
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    marginHorizontal: 20,
+    borderRadius: 0,
+    padding: 10,
+  },
+});

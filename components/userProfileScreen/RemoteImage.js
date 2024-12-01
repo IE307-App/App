@@ -36,9 +36,11 @@ const RemoteImage = ({ imageUri, style }) => {
         uri: imageUri,
       }}
       style={[styles.image, { aspectRatio: ratio }, style]}
-      imageStyle={{
-        borderRadius: 15,
-      }}
+      imageStyle={
+        {
+          // borderRadius: 0,
+        }
+      }
     >
       <View
         style={{
