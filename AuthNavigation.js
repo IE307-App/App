@@ -6,8 +6,8 @@ const AuthNavigation = () => {
   const authCtx = useContext(AuthContext);
 
   return (
-    // <>{authCtx.isAuthenticated ? <SignedInStack /> : <SignedOutStack />}</>
-    <>{authCtx.isAuthenticated ? <SignedInStack /> : <SignedInStack />}</>
+    <>{authCtx.isAuthenticated ? <SignedInStack /> : <SignedOutStack />}</>
+    // <>{authCtx.isAuthenticated ? <SignedInStack /> : <SignedInStack />}</>
   );
 };
 

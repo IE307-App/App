@@ -34,4 +34,4 @@ export const GlobalStyles = {
   }),
 };
 export const DEFAULT_DP =
-  "https://i.pinimg.com/736x/89/bd/4d/89bd4db33ba9999dc990dfc8e0ead989.jpg";
+  "https://i.pinimg.com/474x/36/c0/12/36c0123e0d97b72d303a82113b3390e5.jpg";
