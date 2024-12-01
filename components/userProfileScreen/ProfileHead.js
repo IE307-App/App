@@ -15,7 +15,7 @@ import PressEffect from "../UI/PressEffect.js";
 
 const ProfileHead = ({ userData, viewMode }) => {
   const [profilePic, setProfilePic] = React.useState(
-    !!userData.imageURL ? userData.imageURL : DEFAULT_DP
+    userData && userData.imageURL ? userData.imageURL : DEFAULT_DP
   );
   const navigation = useNavigation();
 

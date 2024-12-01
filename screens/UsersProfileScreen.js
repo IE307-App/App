@@ -10,7 +10,7 @@ import HeaderSvg from "../components/userProfileScreen/HeaderSVG.js";
 
 const UserProfileScreen = ({ navigation, route }) => {
   const authCtx = useContext(AuthContext);
-  const userData = useState(authCtx.userData)[0];
+  const userData = useState(authCtx.userData);
   const [refreshing, setRefreshing] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(150);
   useEffect(() => {
