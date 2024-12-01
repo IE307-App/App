@@ -20,6 +20,7 @@ import ErrorOverlay from "../components/ErrorOverlay";
 import UploadIcon from "../assets/UploadIcon";
 import { Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import postService from "../src/services/postService";
 
 const { width, height } = Dimensions.get("window");
 const PLACEHOLDER_IMAGE =
@@ -46,6 +47,8 @@ function NewPostScreen({ navigation, route }) {
     });
   }, []);
 
+  
+
   useEffect(() => {
     if (route?.params?.type) {
       setType(route?.params?.type);
@@ -53,18 +56,31 @@ function NewPostScreen({ navigation, route }) {
   }, [route?.params?.type]);
   async function newPostHandler() {
     if (post) {
-      const filenameData = getFilename(post);
+      console.log('postnmdm',post);
+      // const filenameData = getFilename(post);
 
-      const formData = new FormData();
-      formData.append("userId", authCtx.userData._id);
-      formData.append("description", caption);
+      // const formData = new FormData();
+      // formData.append("userId", authCtx.userData._id);
+      // formData.append("description", caption);
 
-      formData.append("picture", {
-        uri: post,
-        type: "image/" + filenameData.fileType,
-        name: filenameData.name,
-      });
-      formData.append("picturePath", filenameData.name);
+      // formData.append("picture", {
+      //   uri: post,
+      //   type: "image/" + filenameData.fileType,
+      //   name: filenameData.name,
+      // });
+      // formData.append("picturePath", filenameData.name);
+      const newPostPayload = {
+        caption: caption,
+        image: post,
+      };
+      const response = await postService.createPost(newPostPayload);
+        if (response != null) {
+          Alert.alert('Thành công', 'Bài viết đã được đăng');
+          navigation.navigate("UserProfileScreen")
+        } else {
+          Alert.alert('Lỗi', 'Đăng bài thất bại');
+          console.log('Lỗi:', response);
+        }
       try {
         setUploading((prevData) => {
           return { ...prevData, status: true };
