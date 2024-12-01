@@ -1,45 +1,58 @@
-import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Formik } from "formik";
 import * as yup from "yup";
 import Validator from "email-validator";
-
-import validateEmail from "../../utils/validateEmail";
+import axios from 'axios';
 import Button from "../Button";
 import InputField from "../InputField";
 import { GlobalStyles } from "../../constants/Styles";
+import { serverLink } from "../../constants/server";
 
 const SignupForm = ({ navigation }) => {
+  // Custom email validation for the @gm.uit.edu.vn domain
+  const emailValidation = yup
+    .string()
+    .email()
+    .matches(/^[a-zA-Z0-9._%+-]+@gm\.uit\.edu\.vn$/, "Must be in the format: 'example@gm.uit.edu.vn'")
+    .required("Email address is required.");
+
   const SignupFormSchema = yup.object().shape({
-    email: yup.string().email().required("Email address is required."),
-    password: yup.string().min(8, "Password must have a tleast 8 chracters."),
+    email: emailValidation,
+    password: yup.string().min(5, "Password must have at least 5 characters.").required("Password is required."),
     username: yup
       .string()
-      .required()
-      .min(2, "Username must contain at least 2 chracters."),
+      .required("Username is required.")
+      .min(2, "Username must contain at least 2 characters."),
+    fullname: yup
+      .string()
+      .required("Full name is required.")
+      .min(2, "Full name must contain at least 2 characters."),
   });
 
   const onSignup = async (email, password, username, fullname) => {
     try {
-      const isEmailValid = await validateEmail(email);
-      if (!isEmailValid) {
-        Alert.alert("Invalid Email", "Please enter a valid email!");
-        return;
-      }
       const formData = {
-        fullName: fullname,
-        username: username,
         email: email,
         password: password,
-        picturePath: "",
-        friends: [],
-        occupation: "",
-        bio: "Edit Bio",
+        username: username,
+        name: fullname, 
+        imageURL: 'https://i.pinimg.com/236x/b1/13/a0/b113a01118e0286ce985ee01543422aa.jpg', 
+        moblie: '', 
+        userbio: 'Edit Bio',
+        gender: '', 
       };
-      navigation.replace("LoginScreen");
+  
+      const response = await axios.post(serverLink + "/auth/signup", formData);
+      
+      if (response.status === 201) {
+        Alert.alert("Success", "You have successfully signed up!");
+        navigation.replace("LoginScreen");
+      }
     } catch (error) {
-      console.log("catch:", error.response.data);
+      console.log("Error during signup:", error.response?.data || error.message);
+      Alert.alert("Signup failed", "Something went wrong. Please try again.");
     }
   };
 
@@ -64,6 +77,7 @@ const SignupForm = ({ navigation }) => {
           values,
           isValid,
           errors,
+          touched,
         }) => (
           <>
             <InputField
@@ -73,11 +87,13 @@ const SignupForm = ({ navigation }) => {
               onChangeText={handleChange("fullname")}
               onBlur={handleBlur("fullname")}
               value={values.fullname}
-              inValid={
-                values.fullname.length === 0 || values.fullname.length > 1
-              }
+              inValid={values.fullname.length === 0 || values.fullname.length > 1}
               containerStyle={{ margin: 10 }}
             />
+            {touched.fullname && errors.fullname && (
+              <Text style={styles.errorText}>{errors.fullname}</Text>
+            )}
+            
             <InputField
               placeholder="Username"
               keyboardType="default"
@@ -85,11 +101,13 @@ const SignupForm = ({ navigation }) => {
               onChangeText={handleChange("username")}
               onBlur={handleBlur("username")}
               value={values.username}
-              inValid={
-                values.username.length === 0 || values.username.length > 1
-              }
+              inValid={values.username.length === 0 || values.username.length > 1}
               containerStyle={{ margin: 10 }}
             />
+            {touched.username && errors.username && (
+              <Text style={styles.errorText}>{errors.username}</Text>
+            )}
+
             <InputField
               placeholder="Email"
               keyboardType="email-address"
@@ -97,11 +115,13 @@ const SignupForm = ({ navigation }) => {
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
               value={values.email}
-              inValid={
-                values.email.length < 1 || Validator.validate(values.email)
-              }
+              inValid={values.email.length < 1 || !Validator.validate(values.email)}
               containerStyle={{ margin: 10 }}
             />
+            {touched.email && errors.email && (
+              <Text style={styles.errorText}>{errors.email}</Text>
+            )}
+
             <InputField
               placeholder="Password"
               keyboardType="default"
@@ -109,11 +129,13 @@ const SignupForm = ({ navigation }) => {
               onChangeText={handleChange("password")}
               onBlur={handleBlur("password")}
               value={values.password}
-              inValid={
-                values.password.length === 0 || values.password.length > 7
-              }
+              inValid={values.password.length === 0 || values.password.length > 7}
               containerStyle={{ margin: 10 }}
             />
+            {touched.password && errors.password && (
+              <Text style={styles.errorText}>{errors.password}</Text>
+            )}
+
             <View style={{ margin: 10, marginTop: 30 }}>
               <Button
                 title="Sign up"
@@ -157,5 +179,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: "center",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginLeft: 22,
   },
 });

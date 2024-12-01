@@ -22,6 +22,8 @@ const TopTab = createMaterialTopTabNavigator();
 
 function Posts({ navigation, route, refreshing }) {
   const authCtx = useContext(AuthContext);
+  const userData = authCtx.userData;
+  const img = userData?.imageURL || "";
   const [fetching, setFetching] = useState(true);
   const [errorFetching, setErrorFetching] = useState(false);
   const [posts, setPosts] = useState([]);

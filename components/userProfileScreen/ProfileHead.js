@@ -7,18 +7,20 @@ import {
   Pressable,
   ImageBackground,
 } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 
 import { useNavigation } from "@react-navigation/native";
 import { GlobalStyles, DEFAULT_DP } from "../../constants/Styles.js";
 import PressEffect from "../UI/PressEffect.js";
+import { AuthContext } from "../../store/auth-context.js";
 
 const ProfileHead = ({ userData, viewMode }) => {
+
   const [profilePic, setProfilePic] = React.useState(
-    !!userData.imageURL ? userData.imageURL : DEFAULT_DP
+    userData && userData.imageURL ? userData.imageURL : DEFAULT_DP
   );
   const navigation = useNavigation();
-
+  const { logout } = useContext(AuthContext);
   function ProfileStat({ text, subText, onPress }) {
     return (
       <Pressable style={{ alignItems: "center" }} onPress={onPress}>
@@ -31,6 +33,17 @@ const ProfileHead = ({ userData, viewMode }) => {
       </Pressable>
     );
   }
+  const handleEditPress = () => {
+    if (viewMode) {
+      // Nếu ở chế độ xem, chuyển hướng tới tin nhắn
+      navigation.navigate("MessagesScreen");
+    } else {
+      // Nếu không ở chế độ xem, thực hiện logout
+      logout();
+      navigation.navigate("LoginScreen"); // Sau khi logout, chuyển hướng đến màn hình đăng nhập
+    }
+  };
+
 
   return (
     <View>

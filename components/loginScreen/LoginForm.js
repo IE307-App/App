@@ -11,13 +11,15 @@ import { GlobalStyles } from "../../constants/Styles";
 import { AuthContext } from "../../store/auth-context";
 import { serverLink } from "../../constants/server";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const ApiUrl = serverLink ;
+
+const ApiUrl = serverLink;
+
 const LoginForm = ({ navigation }) => {
   const authCtx = useContext(AuthContext);
 
   const LoginFormSchema = yup.object().shape({
-    email: yup.string().email().required("Email address is required."),
-    password: yup.string().min(5, "Password must have a tleast 5 chracters."),
+    email: yup.string().email("Invalid email address").required("Email address is required."),
+    password: yup.string().min(5, "Password must have at least 5 characters.").required("Password is required."),
   });
 
   async function onLogin(email, password) {
@@ -30,14 +32,13 @@ const LoginForm = ({ navigation }) => {
       if (response.data.status) {
         const jwt = response.data.jwt;
         await AsyncStorage.setItem("token", jwt);
-        const responseUserData = await axios.get(ApiUrl+"/api/users/profile", {
-          jwt,
+        const responseUserData = await axios.get(ApiUrl + "/api/users/profile", {
           headers: {
             Authorization: `Bearer ${jwt}`, // Thêm JWT vào header
           }
         });
         // Đăng nhập thành công
-          authCtx.authenticate(responseUserData.data); // Gọi hàm authenticate từ context và truyền dữ liệu trả về
+        authCtx.authenticate(responseUserData.data); 
         console.log("Response data:", responseUserData.data);
       } else {
         Alert.alert("Login failed", "Invalid credentials");
@@ -73,11 +74,14 @@ const LoginForm = ({ navigation }) => {
               placeholder="Email"
               keyboardType="email-address"
               textContentType="emailAddress"
-              inValid={
-                values.email.length < 1 || Validator.validate(values.email)
-              }
+              inValid={values.email.length < 1 || Validator.validate(values.email)}
               containerStyle={{ margin: 10 }}
             />
+            {/* Hiển thị lỗi nếu có */}
+            {errors.email && (
+              <Text style={styles.errorText}>{errors.email}</Text>
+            )}
+
             <InputField
               textContentType="password"
               onChangeText={handleChange("password")}
@@ -85,11 +89,14 @@ const LoginForm = ({ navigation }) => {
               value={values.password}
               placeholder="Password"
               keyboardType="default"
-              inValid={
-                values.password.length === 0 || values.password.length > 7
-              }
+              inValid={values.password.length === 0 || values.password.length > 7}
               containerStyle={{ margin: 10 }}
             />
+            {/* Hiển thị lỗi nếu có */}
+            {errors.password && (
+              <Text style={styles.errorText}>{errors.password}</Text>
+            )}
+
             <TouchableOpacity>
               <Text
                 style={{
@@ -109,8 +116,6 @@ const LoginForm = ({ navigation }) => {
                 disabled={!isValid}
               />
             </View>
-            {/* <Text style={{color: 'red'}}>{errors.password}</Text>
-                <Text style={{color: 'red'}}>{errors.email}</Text> */}
 
             <View style={styles.signupContainer}>
               <Text style={{ color: GlobalStyles.colors.gray }}>
@@ -128,8 +133,6 @@ const LoginForm = ({ navigation }) => {
     </View>
   );
 };
-
-export default LoginForm;
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -149,4 +152,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 10,
   },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginLeft: 22,
+  },
 });
+
+export default LoginForm;

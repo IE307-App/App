@@ -1,14 +1,18 @@
-import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useContext } from "react";
+import { Pressable, StyleSheet, Text, View, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
   withTiming,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { AuthContext } from "../../store/auth-context";
+
 
 const SettingsIcon = ({ color = "white", onPress }) => {
   const rotation = useSharedValue(0);
+
+  const { logout } = useContext(AuthContext); 
 
   const rotateIcon = () => {
     rotation.value = withTiming(rotation.value + 360, { duration: 500 });
@@ -20,14 +24,14 @@ const SettingsIcon = ({ color = "white", onPress }) => {
     };
   });
 
+  const handlePress = () => {
+    rotateIcon();
+    logout();  
+    onPress(); 
+  };
+
   return (
-    <Animated.View
-      onTouchEnd={() => {
-        rotateIcon();
-        onPress();
-      }}
-      style={[animatedStyle]}
-    >
+    <Animated.View onTouchEnd={handlePress} style={[animatedStyle]}>
       <Ionicons name="settings" color={color} size={30} />
     </Animated.View>
   );
