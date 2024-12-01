@@ -7,6 +7,7 @@ const AuthNavigation = () => {
 
   return (
     <>{authCtx.isAuthenticated ? <SignedInStack /> : <SignedOutStack />}</>
+    // <>{authCtx.isAuthenticated ? <SignedInStack /> : <SignedInStack />}</>
   );
 };
 

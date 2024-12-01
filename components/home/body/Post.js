@@ -159,7 +159,7 @@ function Post({ post }) {
   function PostStats() {
     const [liked, setLiked] = useState(false);
 
-    const [totalLikes, setTotalLikes] = useState(post.likes.length);
+    const [totalLikes, setTotalLikes] = useState(post.likes.length?post.likes.length:0);
     const [showCaptions, setShowCaptions] = useState(false);
     const [showComments, setShowComments] = useState(false);
     async function handleLike() {
@@ -208,7 +208,7 @@ function Post({ post }) {
             />
             <FooterButton
               icon={"chatbubble-ellipses-outline"}
-              number={post.comments.length}
+              number={post.comments.length?post.comments.length:0}
               onPress={() => {
                 setShowComments(true);
               }}

@@ -40,6 +40,7 @@ const LoginForm = ({ navigation }) => {
         // Đăng nhập thành công
         authCtx.authenticate(responseUserData.data); 
         console.log("Response data:", responseUserData.data);
+        console.log("Login success with token:", jwt);
       } else {
         Alert.alert("Login failed", "Invalid credentials");
       }

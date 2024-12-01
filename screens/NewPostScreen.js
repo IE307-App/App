@@ -20,6 +20,7 @@ import ErrorOverlay from "../components/ErrorOverlay";
 import UploadIcon from "../assets/UploadIcon";
 import { Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import postService from "../src/services/post.service";
 
 const { width, height } = Dimensions.get("window");
 const PLACEHOLDER_IMAGE =
@@ -46,6 +47,8 @@ function NewPostScreen({ navigation, route }) {
     });
   }, []);
 
+  
+
   useEffect(() => {
     if (route?.params?.type) {
       setType(route?.params?.type);
@@ -53,26 +56,28 @@ function NewPostScreen({ navigation, route }) {
   }, [route?.params?.type]);
   async function newPostHandler() {
     if (post) {
-      const filenameData = getFilename(post);
-
-      const formData = new FormData();
-      formData.append("userId", authCtx.userData._id);
-      formData.append("description", caption);
-
-      formData.append("picture", {
-        uri: post,
-        type: "image/" + filenameData.fileType,
-        name: filenameData.name,
-      });
-      formData.append("picturePath", filenameData.name);
+      console.log('postnmdm',post);
+      const newPostPayload = {
+        caption: caption,
+        image: post,
+      };
+      const response = await postService.createPost(newPostPayload);
+        if (response != null) {
+          // Alert.alert('Thành công', 'Bài viết đã được đăng');
+          console.log('Thành công:', response);
+          navigation.navigate("HomeScreen")
+        } else {
+          // Alert.alert('Lỗi', 'Đăng bài thất bại');
+          console.log('Lỗi:', response);
+        }
       try {
         setUploading((prevData) => {
           return { ...prevData, status: true };
         });
-        setTimeout(() => {
-          setUploading({ status: false, progress: 0, success: true });
-          navigation.goBack();
-        }, 3000);
+        // setTimeout(() => {
+        //   setUploading({ status: false, progress: 0, success: true });
+        //   navigation.goBack();
+        // }, 3000);
       } catch (error) {
         setUploading((prevData) => {
           return { ...prevData, success: false };

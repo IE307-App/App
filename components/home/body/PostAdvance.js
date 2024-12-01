@@ -18,22 +18,21 @@ import { AuthContext } from "../../../store/auth-context";
 import PressEffect from "../../UI/PressEffect";
 import { LinearGradient } from "expo-linear-gradient";
 const { height, width } = Dimensions.get("window");
-
+import postService from "../../../src/services/post.service";
 function PostAdvance({ post }) {
   const authCtx = useContext(AuthContext);
 
   function Avatar() {
     const navigation = useNavigation();
     const [profilePic, setProfilePic] = React.useState(
-      !!post.userPicturePath ? post.userPicturePath : DEFAULT_DP
+      post.user && post.user.imageURL ? post.user.imageURL : DEFAULT_DP
     );
+
     return (
       <View style={{ flexDirection: "row" }}>
         <PressEffect>
           <Pressable
-            style={{
-              flexDirection: "row",
-            }}
+            style={{ flexDirection: "row" }}
             onPress={() => {
               navigation.navigate("UserProfileScreen", {
                 backWhite: true,
@@ -44,18 +43,14 @@ function PostAdvance({ post }) {
             <Image
               source={
                 profilePic
-                  ? { uri: profilePic }
+                  ? { uri: post.user.imageURL }
                   : {
                       uri: "https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg",
                     }
               }
               style={styles.story}
             />
-            <View
-              style={{
-                marginLeft: 10,
-              }}
-            >
+            <View style={{ marginLeft: 10 }}>
               <Text
                 style={{
                   color: "white",
@@ -63,7 +58,7 @@ function PostAdvance({ post }) {
                   fontSize: 15,
                 }}
               >
-                username
+                {post.user && post.user.userName ? post.user.userName : "Username"}
               </Text>
               <Text
                 style={{
@@ -72,7 +67,7 @@ function PostAdvance({ post }) {
                   fontWeight: "bold",
                 }}
               >
-                {timeDifference(post.createdAt)}
+                {timeDifference(post.createAt || new Date())}
               </Text>
             </View>
           </Pressable>
@@ -80,6 +75,7 @@ function PostAdvance({ post }) {
       </View>
     );
   }
+
   function PostFotter() {
     const [showCaptions, setShowCaptions] = useState(false);
 
@@ -99,16 +95,12 @@ function PostAdvance({ post }) {
               size={15}
               color={GlobalStyles.colors.gray}
             />
-            <Text
-              style={{ color: GlobalStyles.colors.gray, paddingHorizontal: 5 }}
-            >
-              Lahore, Pakistan
+            <Text style={{ color: GlobalStyles.colors.gray, paddingHorizontal: 5 }}>
+              {post.location || "Location not available"}
             </Text>
           </View>
-          <Text
-            style={{ color: GlobalStyles.colors.gray, paddingHorizontal: 5 }}
-          >
-            25 July, 2024
+          <Text style={{ color: GlobalStyles.colors.gray, paddingHorizontal: 5 }}>
+            {post.createdAt ? timeDifference(post.createdAt) : "Unknown Date"}
           </Text>
         </View>
         <Text
@@ -130,17 +122,18 @@ function PostAdvance({ post }) {
           >
             Post Title:{" "}
           </Text>
-          {post.description}
+          {post.caption || "No caption available"}
         </Text>
       </View>
     );
   }
+
   function PostImage({ children }) {
     const [resizeModeCover, setResizeModeCover] = useState(true);
     const [ratio, setRatio] = useState(1);
 
     useEffect(() => {
-      Image.getSize(post.picturePath, (width, height) => {
+      Image.getSize(post.image, (width, height) => {
         const imageRatio = width / height;
         if (imageRatio < 0.9) {
           setRatio(1);
@@ -164,7 +157,7 @@ function PostAdvance({ post }) {
         }}
       >
         <ImageBackground
-          source={{ uri: post.picturePath }}
+          source={{ uri: post.image || DEFAULT_DP }} // Default image if post.Image is missing
           style={{
             width: "100%",
             aspectRatio: ratio,
@@ -190,16 +183,25 @@ function PostAdvance({ post }) {
       </Pressable>
     );
   }
+
   function PostStats() {
     const [liked, setLiked] = useState(false);
 
-    const [totalLikes, setTotalLikes] = useState(post.likes.length);
+    const [totalLikes, setTotalLikes] = useState(post.likeByUser.length || 0); 
     const [showComments, setShowComments] = useState(false);
-    async function handleLike() {
-      setTotalLikes((prevData) => (liked ? prevData - 1 : prevData + 1));
 
+    const handleLike = async (postId) => {
       setLiked(!liked);
-    }
+      try {
+        await postService.likePost(postId);
+        const post  = await postService.getPostById(postId);
+        setTotalLikes(post.likeByUser.length);
+        console.log("Thích bài đăng thành công");
+        
+      } catch (err) {
+        console.error('Lỗi khi thích bài đăng:', err);
+      }
+    };
 
     function FooterButton({ icon, number, onPress, color = "white" }) {
       return (
@@ -223,15 +225,9 @@ function PostAdvance({ post }) {
                   size={20}
                   color={color}
                 />
-
-                {/* <Text
-                  style={{
-                    color: "white",
-                    fontWeight: "600",
-                  }}
-                >
+                <Text style={{ color: "white", fontWeight: "600" }}>
                   {number}
-                </Text> */}
+                </Text>
               </View>
             </PressEffect>
           </Pressable>
@@ -242,7 +238,6 @@ function PostAdvance({ post }) {
     return (
       <>
         <CommentSheet visible={showComments} setVisible={setShowComments} />
-
         <View
           style={{
             flexDirection: "row",
@@ -259,20 +254,19 @@ function PostAdvance({ post }) {
               gap: 5,
             }}
           >
-            <FooterButton
+            <FooterButton onPress={() => handleLike(post.id)}
               icon={liked ? "heart" : "heart-outline"}
               number={totalLikes}
-              onPress={handleLike}
+              // onPress={handleLike(post.id)}
               color={GlobalStyles.colors.greenLight}
             />
             <FooterButton
               icon={"chatbubble-ellipses"}
-              number={post.comments.length}
+              number={post.comments.length || 0}
               onPress={() => {
                 setShowComments(true);
               }}
             />
-
             <FooterButton icon={"arrow-redo"} onPress={() => {}} left={20} />
           </View>
         </View>
@@ -303,5 +297,8 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 50,
+  },
+  footerIcon: {
+    padding: 5,
   },
 });
