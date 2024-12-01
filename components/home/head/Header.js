@@ -9,9 +9,7 @@ import { AuthContext } from "../../../store/auth-context";
 const Header = ({ navigation }) => {
   const authCtx = useContext(AuthContext); 
   const [userData, setUserData] = useState(authCtx.userData); 
-  console.log("Header -> userData", userData);
   const img = userData?.imageURL || ""; 
-  console.log("Header -> img", img);
   return (
     <View style={[styles.container]}>
       <Pressable

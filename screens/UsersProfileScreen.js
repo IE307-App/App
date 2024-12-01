@@ -9,8 +9,9 @@ import Header from "../components/userProfileScreen/Header.js";
 import HeaderSvg from "../components/userProfileScreen/HeaderSVG.js";
 
 const UserProfileScreen = ({ navigation, route }) => {
+
   const authCtx = useContext(AuthContext);
-  const userData = useState(authCtx.userData);
+  const userData = authCtx.userData;
   const [refreshing, setRefreshing] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(150);
   useEffect(() => {
