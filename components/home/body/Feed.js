@@ -18,7 +18,6 @@ const Feed = ({ StoryTranslate }) => {
       try {
         const data = await postService.getAllPost(); // Get all posts
         setPosts(data); // Update state with fetched data
-        console.log("Posts:", data);
       } catch (error) {
         console.error("Error fetching posts:", error);
         Alert.alert("Lỗi", "Không thể tải bài viết."); // Improved error message

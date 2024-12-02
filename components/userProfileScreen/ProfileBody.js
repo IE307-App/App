@@ -16,7 +16,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Post from "../../components/userProfileScreen/Post";
 import { AuthContext } from "../../store/auth-context";
 import { Ionicons } from "@expo/vector-icons";
-import { POSTS } from "../../data/posts.js";
+import postService from "../../src/services/post.service.js";
 
 const TopTab = createMaterialTopTabNavigator();
 
@@ -30,7 +30,8 @@ function Posts({ navigation, route, refreshing }) {
   const getPosts = async () => {
     try {
       setFetching(true);
-
+      const POSTS = await postService.getAllPostByUserId();
+      console.log("Posts", POSTS);
       setErrorFetching(false);
       setPosts(POSTS);
     } catch (error) {
@@ -85,12 +86,14 @@ function Posts({ navigation, route, refreshing }) {
             <View style={{ flex: 1 }}>
               {posts.map((item, index) => (
                 <View key={index}>
+                  
                   {index % 2 === 0 && <Post postData={posts[index]} />}
                 </View>
               ))}
             </View>
             <View style={{ flex: 1 }}>
               {posts.map((item, index) => (
+
                 <View key={index}>
                   {index % 2 !== 0 && <Post postData={posts[index]} />}
                 </View>
