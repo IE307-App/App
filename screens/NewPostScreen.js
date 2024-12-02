@@ -56,7 +56,7 @@ function NewPostScreen({ navigation, route }) {
   }, [route?.params?.type]);
   async function newPostHandler() {
     if (post) {
-      console.log('postnmdm',post);
+      // console.log('postnmdm',post);
       const newPostPayload = {
         caption: caption,
         image: post,
@@ -64,11 +64,11 @@ function NewPostScreen({ navigation, route }) {
       const response = await postService.createPost(newPostPayload);
         if (response != null) {
           // Alert.alert('Thành công', 'Bài viết đã được đăng');
-          console.log('Thành công:', response);
+          // console.log('Thành công:', response);
           navigation.navigate("HomeScreen")
         } else {
           // Alert.alert('Lỗi', 'Đăng bài thất bại');
-          console.log('Lỗi:', response);
+          // console.log('Lỗi:', response);
         }
       try {
         setUploading((prevData) => {
