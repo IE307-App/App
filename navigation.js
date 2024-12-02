@@ -25,6 +25,8 @@ import PressEffect from "./components/UI/PressEffect";
 import { GlobalStyles } from "./constants/Styles";
 import ExploreScreen from "./screens/ExploreScreen";
 import ViewStoryScreen from "./screens/ViewStoryScreen";
+import OtherProfileScreen from "./screens/OtherProfileScreen ";
+// import OtherProfileScreen from "./screens/otherProfileScreen ";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -129,6 +131,7 @@ export const SignedInStack = () => {
             component={UserProfileScreen}
           />
           <Stack.Screen name="SearchScreen" component={SearchScreen} />
+          <Stack.Screen name="OtherProfileScreen" component={OtherProfileScreen} />
 
           <Stack.Screen name="MessagesScreen" component={MessagesScreen} />
           <Stack.Screen name="ViewStoryScreen" component={ViewStoryScreen} />
