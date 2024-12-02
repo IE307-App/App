@@ -10,21 +10,23 @@ import { getFilename } from "../utils/helperFunctions";
 import ProgressOverlay from "../components/ProgressOverlay";
 import ErrorOverlay from "../components/ErrorOverlay";
 import PressEffect from "../components/UI/PressEffect";
+import userService from "../src/services/user.service";
 
 const EditProfileScreen = ({ navigation, route }) => {
   const authCtx = useContext(AuthContext);
   const [profilePic, setProfilePic] = useState("");
   const [showCamera, setShowCamera] = useState(false);
   const [userData, setUserData] = useState({
-    fullName: authCtx.userData.fullName,
-    username: authCtx.userData.username,
-    bio: authCtx.userData.bio,
+    name: authCtx.userData.name,
+    userName: authCtx.userData.userName,
+    bio: authCtx.userData.userbio,
     email: authCtx.userData.email,
     password: "",
     friends: "",
     picturePath: "",
-    occupation: authCtx.userData.occupation,
+    mobile: authCtx.userData.mobile,
   });
+
   const [uploading, setUploading] = useState({
     status: false,
     progress: 0,
@@ -34,35 +36,42 @@ const EditProfileScreen = ({ navigation, route }) => {
   async function updateBtnHandler() {
     const filenameData = getFilename(profilePic);
 
-    const formData = new FormData();
-    formData.append("_id", authCtx.userData._id);
-    formData.append("username", userData.username);
-    formData.append("fullName", userData.fullName);
-    formData.append("email", userData.email);
-    formData.append("occupation", userData.occupation);
-    formData.append("bio", userData.bio);
-    if (!!profilePic) {
-      formData.append("picture", {
-        uri: profilePic,
-        type: "image/" + filenameData.fileType,
-        name: filenameData.name,
-      });
-      formData.append("picturePath", filenameData.name);
-    }
-    try {
-      setUploading((prevData) => {
-        return { ...prevData, status: true };
-      });
-      setTimeout(() => {
-        setUploading({ status: false, progress: 0, success: true });
-        navigation.goBack();
-      }, 3000);
-    } catch (error) {
-      setUploading((prevData) => {
-        return { ...prevData, success: false };
-      });
-      console.log(error.message);
-    }
+        const formData = {
+            username: userData.userName,
+            name: userData.name,
+            email: userData.email,
+            mobile: userData.mobile,
+            userbio: userData.userbio,
+        
+        };
+
+        if (!!profilePic) {
+            formData.picture = {
+                uri: profilePic,
+                type: "image/" + filenameData.fileType,
+                name: filenameData.name,
+            };
+
+            formData.imageURL = profilePic;
+        }
+
+        try {
+            setUploading({ status: true, progress: 0, success: true });
+
+            // Call the API to update user info
+            await userService.updateUserInfo(formData);
+
+            authCtx.updateUserData(formData);
+          
+            setTimeout(() => {
+                setUploading({ status: false, progress: 0, success: true });
+                navigation.goBack();
+            }, 3000);
+        } catch (error) {
+            setUploading({ status: false, progress: 0, success: false });
+            console.log(error.message);
+        }
+
   }
   useEffect(() => {
     navigation.setOptions({
@@ -128,14 +137,14 @@ const EditProfileScreen = ({ navigation, route }) => {
         </View>
         <Text style={styles.title}>Full Name</Text>
         <InputField
-          placeholder="John Doe"
+          placeholder="Tan Anh"
           keyboardType="default"
           onChangeText={(text) => {
             setUserData((prevData) => {
-              return { ...prevData, fullName: text };
+              return { ...prevData, name: text };
             });
           }}
-          value={userData.fullName}
+          value={userData.name}
           inValid={true}
         />
 
@@ -145,10 +154,10 @@ const EditProfileScreen = ({ navigation, route }) => {
           keyboardType="default"
           onChangeText={(text) => {
             setUserData((prevData) => {
-              return { ...prevData, username: text };
+              return { ...prevData, userName: text };
             });
           }}
-          value={userData.username}
+          value={userData.userName}
           inValid={true}
         />
 
@@ -178,16 +187,16 @@ const EditProfileScreen = ({ navigation, route }) => {
           inValid={true}
         /> */}
 
-        <Text style={styles.title}>Occupation</Text>
+        <Text style={styles.title}>Mobile</Text>
         <InputField
-          placeholder="Influencer"
+          placeholder="0388754761"
           keyboardType="default"
           onChangeText={(text) => {
             setUserData((prevData) => {
-              return { ...prevData, occupation: text };
+              return { ...prevData, mobile: text };
             });
           }}
-          value={userData.occupation}
+          value={userData.mobile}
           inValid={true}
         />
 
@@ -197,10 +206,10 @@ const EditProfileScreen = ({ navigation, route }) => {
           keyboardType="default"
           onChangeText={(text) => {
             setUserData((prevData) => {
-              return { ...prevData, bio: text };
+              return { ...prevData, userbio: text };
             });
           }}
-          value={userData.bio}
+          value={userData.userbio}
           inValid={true}
           multiline={true}
         />

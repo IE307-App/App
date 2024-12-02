@@ -30,7 +30,7 @@ const UserProfileScreen = ({ navigation, route }) => {
         }}
       >
         <Header viewMode={route?.params?.ViewUser} />
-        <ProfileHead userData={userData} viewMode={route?.params?.ViewUser} />
+        <ProfileHead  viewMode={route?.params?.ViewUser} />
       </View>
 
       <ProfileBody refreshing={refreshing} />

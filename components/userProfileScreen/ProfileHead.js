@@ -7,20 +7,69 @@ import {
   Pressable,
   ImageBackground,
 } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { GlobalStyles, DEFAULT_DP } from "../../constants/Styles.js";
 import PressEffect from "../UI/PressEffect.js";
 import { AuthContext } from "../../store/auth-context.js";
+import postService from "../../src/services/post.service.js";
+import userService from "../../src/services/user.service.js";
 
-const ProfileHead = ({ userData, viewMode }) => {
-
-  const [profilePic, setProfilePic] = React.useState(
-    userData && userData.imageURL ? userData.imageURL : DEFAULT_DP
+const ProfileHead = ({ viewMode }) => {
+  const { userData: updatedUserData, updateUserData } = useContext(AuthContext); // Lấy userData từ context
+  const [postCount, setPostCount] = useState(0); // Số bài viết
+  const [followers, setFollowers] = useState(0);
+  const [followings, setFollowings] = useState(0);
+  const [profilePic, setProfilePic] = useState(
+    updatedUserData?.imageURL || DEFAULT_DP // Sử dụng updatedUserData thay vì userData
   );
+
   const navigation = useNavigation();
   const { logout } = useContext(AuthContext);
+
+  // Hàm lấy số lượng followers và following của người dùng
+  const fetchUserStats = async () => {
+    try {
+      const data = await userService.getUserStats();
+      setFollowers(data.followersCount);
+      setFollowings(data.followingCount);
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
+    }
+  };
+
+  // Hàm lấy số lượng bài viết của người dùng
+  const fetchPostCount = async () => {
+    try {
+      const data = await postService.getAllPostByUserId();
+      setPostCount(data.length);
+    } catch (error) {
+      console.error("Error fetching post count:", error);
+    }
+  };
+
+  // Gọi các hàm khi component được mount hoặc khi updatedUserData thay đổi
+  useEffect(() => {
+    fetchPostCount();
+    fetchUserStats();
+  }, [updatedUserData]);
+
+  // Sử dụng useFocusEffect để cập nhật khi màn hình được focus (quay lại từ các màn hình khác)
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchPostCount();
+      fetchUserStats();
+    }, [updatedUserData])
+  );
+
+  // Cập nhật ảnh đại diện khi userData thay đổi
+  useEffect(() => {
+    if (updatedUserData?.imageURL) {
+      setProfilePic(updatedUserData.imageURL);
+    }
+  }, [updatedUserData]); // Khi updatedUserData thay đổi, cập nhật lại ảnh đại diện
+
   function ProfileStat({ text, subText, onPress }) {
     return (
       <Pressable style={{ alignItems: "center" }} onPress={onPress}>
@@ -33,6 +82,7 @@ const ProfileHead = ({ userData, viewMode }) => {
       </Pressable>
     );
   }
+
   const handleEditPress = () => {
     if (viewMode) {
       // Nếu ở chế độ xem, chuyển hướng tới tin nhắn
@@ -43,7 +93,6 @@ const ProfileHead = ({ userData, viewMode }) => {
       navigation.navigate("LoginScreen"); // Sau khi logout, chuyển hướng đến màn hình đăng nhập
     }
   };
-
 
   return (
     <View>
@@ -57,7 +106,6 @@ const ProfileHead = ({ userData, viewMode }) => {
           style={{
             width: 150,
             height: 150,
-
             marginHorizontal: 10,
           }}
           imageStyle={{
@@ -126,7 +174,7 @@ const ProfileHead = ({ userData, viewMode }) => {
             color: "white",
           }}
         >
-          {userData.fullName}
+          {updatedUserData?.name}
         </Text>
         <Text
           style={{
@@ -134,7 +182,7 @@ const ProfileHead = ({ userData, viewMode }) => {
             color: "rgba(255,255,255,0.6)",
           }}
         >
-          @{userData.username}
+          @{updatedUserData?.userName}
         </Text>
       </View>
 
@@ -150,9 +198,9 @@ const ProfileHead = ({ userData, viewMode }) => {
           paddingVertical: 10,
         }}
       >
-        <ProfileStat text={"255"} subText={"Posts"} />
-        <ProfileStat text={"14.6k"} subText={"Followers"} />
-        <ProfileStat text={"378"} subText={"Followings"} />
+        <ProfileStat text={postCount} subText={"Posts"} />
+        <ProfileStat text={followers} subText={"Followers"} />
+        <ProfileStat text={followings} subText={"Followings"} />
       </View>
     </View>
   );

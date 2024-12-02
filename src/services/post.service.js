@@ -7,7 +7,6 @@ const postService = {
     async getAllPost() {
         try {
             const token = await AsyncStorage.getItem('token');
-            console.log("Token get AllPost:", token);
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             const response = await axiosInstance.get("api/post/all");
             return response.data;
@@ -33,6 +32,7 @@ const postService = {
             const token = await AsyncStorage.getItem('token');
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             const response = await axiosInstance.get("api/post/all/mypost");
+            console.log("Get all post by user id response:", response.data);
             return response.data;
         } catch (error) {
             console.error("Get post error:", error.response?.data || error.message);

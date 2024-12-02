@@ -1,7 +1,120 @@
-import { axiosInstance } from '../api/axios.config'; // Giả sử bạn đã cấu hình axiosInstance
+import { axiosInstance } from '../api/axios.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const userService = {
+    
+    // Lấy thông tin người dùng hiện tại
+    async getUserInfo() {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token is missing');
+            }
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const response = await axiosInstance.get('/api/users/profile');
+            return response.data;
+        } catch (error) {
+            console.error("Get user info error:", error.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    // Lấy số lượng followers và following của người dùng
+    async getUserStats() {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token is missing');
+            }
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const response = await axiosInstance.get('api/users/stats');
+            return response.data;
+        } catch (error) {
+            console.error("Get user stats error:", error.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    // Cập nhật thông tin người dùng
+    async updateUserInfo(userDto) {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token is missing');
+            }
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const response = await axiosInstance.put('api/users/update', userDto);
+            console.log("Update user info response:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Update user info error:", error.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    // Lấy tất cả các followers của người dùng
+    async getUserFollowers() {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token is missing');
+            }
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const response = await axiosInstance.get('api/users/followers');
+            return response.data;
+        } catch (error) {
+            console.error("Get user followers error:", error.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    // Lấy tất cả những người mà người dùng đang follow
+    async getUserFollowing() {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token is missing');
+            }
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const response = await axiosInstance.get('api/users/following');
+            return response.data;
+        } catch (error) {
+            console.error("Get user following error:", error.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    // Follow một người dùng
+    async followUser(userId) {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token is missing');
+            }
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const response = await axiosInstance.put(`api/users/follow/${userId}`);
+            return response.data;
+        } catch (error) {
+            console.error("Follow user error:", error.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    // Unfollow một người dùng
+    async unfollowUser(userId) {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token is missing');
+            }
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const response = await axiosInstance.put(`api/users/unfollow/${userId}`);
+            return response.data;
+        } catch (error) {
+            console.error("Unfollow user error:", error.response?.data || error.message);
+            throw error;
+        }
+    },
     // Lấy thông tin người dùng theo ID
     async getUserById(userId) {
         try {
@@ -61,45 +174,6 @@ const userService = {
             return response.data;
         } catch (error) {
             console.error("Search user error:", error.response?.data || error.message);
-            throw error;
-        }
-    },
-
-    // Cập nhật thông tin người dùng
-    async updateUserDetails(updatedUser) {
-        try {
-            const token = await AsyncStorage.getItem('token');
-            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            const response = await axiosInstance.put('api/users/update', updatedUser);
-            return response.data;
-        } catch (error) {
-            console.error("Update user details error:", error.response?.data || error.message);
-            throw error;
-        }
-    },
-
-    // Follow người dùng
-    async followUser(followUserId) {
-        try {
-            const token = await AsyncStorage.getItem('token');
-            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            const response = await axiosInstance.put(`api/users/follow/${followUserId}`);
-            return response.data;
-        } catch (error) {
-            console.error("Follow user error:", error.response?.data || error.message);
-            throw error;
-        }
-    },
-
-    // Unfollow người dùng
-    async unfollowUser(followUserId) {
-        try {
-            const token = await AsyncStorage.getItem('token');
-            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            const response = await axiosInstance.put(`api/users/follow/${followUserId}`);
-            return response.data;
-        } catch (error) {
-            console.error("Unfollow user error:", error.response?.data || error.message);
             throw error;
         }
     }

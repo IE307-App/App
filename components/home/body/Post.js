@@ -22,7 +22,7 @@ function Post({ post }) {
   function PostHeader() {
     const navigation = useNavigation();
     const [profilePic, setProfilePic] = React.useState(
-      !!post.userPicturePath ? post.userPicturePath : DEFAULT_DP
+      post.user && post.user.imageURL ? post.user.imageURL : DEFAULT_DP
     );
     return (
       <View style={{ alignSelf: "center", flexDirection: "row" }}>

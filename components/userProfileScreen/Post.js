@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import RemoteImage from "./RemoteImage";
-import MainPost from "../home/body/Post";
+import MainPost from "../home/body/PostAdvance";
 
 const { height, width } = Dimensions.get("window");
 
 const Post = ({ postData }) => {
+  console.log("PostData", postData);
   const navigation = useNavigation();
   const [showPost, setShowPost] = useState(false);
   return (
@@ -41,7 +42,7 @@ const Post = ({ postData }) => {
         }}
         style={{ margin: 5 }}
       >
-        <RemoteImage imageUri={postData.picturePath} />
+        <RemoteImage imageUri={postData.image} />
       </Pressable>
     </View>
   );
