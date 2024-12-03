@@ -19,25 +19,36 @@ const SignupScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View
         style={{
-          margin: 30,
-          marginTop: GlobalStyles.styles.windowHeight * 0.1,
+          margin: 0,
+          marginTop: GlobalStyles.styles.windowHeight * 0.13,
           justifyContent: "center",
           alignItems: "center",
         }}
       >
+        <Image
+          source={require("../assets/Logo_UIT.png")}
+          style={{
+            width: 130,
+            height: 130,
+            resizeMode: "contain",
+            marginTop: 5,
+          }}
+        />
         <Text
           style={{
-            fontSize: 35,
-            fontWeight: "bold",
-            color: "white",
+            fontSize: 30,
+            // fontWeight: "bold",
+            color: "#3A5FCD",
+            // color: "black",
           }}
         >
-          Welcome!
+          SIGN UP
         </Text>
         <Text
           style={{
             fontSize: 18,
             color: "rgba(255,255,255,0.6)",
+            marginBottom: 5,
           }}
         >
           Create your account
@@ -55,6 +66,6 @@ export default SignupScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: GlobalStyles.colors.primary,
+    backgroundColor: GlobalStyles.colors.white,
   },
 });

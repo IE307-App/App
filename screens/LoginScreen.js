@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 import LoginForm from "../components/loginScreen/LoginForm";
 import { GlobalStyles } from "../constants/Styles";
@@ -9,28 +9,29 @@ const LoginScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View
         style={{
-          margin: 30,
-          marginTop: GlobalStyles.styles.windowHeight * 0.1,
+          margin: 10,
+          marginTop: GlobalStyles.styles.windowHeight * 0.19,
           justifyContent: "center",
           alignItems: "center",
         }}
       >
+        <Image
+          source={require("../assets/Logo_UIT.png")}
+          style={{
+            width: 130,
+            height: 130,
+            resizeMode: "contain",
+            marginTop: 5,
+          }}
+        />
         <Text
           style={{
-            fontSize: 35,
-            fontWeight: "bold",
-            color: "white",
+            fontSize: 30,
+            // fontWeight: "bold",
+            color: "#3A5FCD",
           }}
         >
-          Welcome Back!
-        </Text>
-        <Text
-          style={{
-            fontSize: 18,
-            color: "rgba(255,255,255,0.6)",
-          }}
-        >
-          Sign in to be continoue
+          LOG IN
         </Text>
       </View>
       <View style={{ marginHorizontal: 10 }}>
@@ -45,7 +46,7 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: GlobalStyles.colors.primary,
+    backgroundColor: GlobalStyles.colors.white,
     // paddingTop: 50,
     // paddingHorizontal: 12,
   },

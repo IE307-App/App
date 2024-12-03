@@ -85,6 +85,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // backgroundColor: GlobalStyles.colors.primary,
     backgroundColor: GlobalStyles.colors.primary,
   },
 });

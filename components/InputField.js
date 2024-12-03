@@ -27,9 +27,16 @@ const InputField = ({
   autoFocus,
   multiline,
   containerStyle,
+  iconName,
+  iconColor = "#bdbdbd",
+  passwordToggle,
 }) => {
   const txtRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const togglePasswordVisibility = () => {
+    setSecureText((prev) => !prev);
+  };
 
   return (
     <View
@@ -47,6 +54,13 @@ const InputField = ({
         },
       ]}
     >
+      {/* Hiển thị icon nếu có iconName */}
+      {iconName && (
+        <View style={{ marginHorizontal: 5 }}>
+          <Ionicons name={iconName} size={25} color={iconColor} />
+        </View>
+      )}
+
       {search && (
         <View style={{ marginHorizontal: 5 }}>
           <Ionicons
@@ -58,13 +72,14 @@ const InputField = ({
       )}
       <View style={{ flex: 1 }}>
         <TextInput
-          style={{ color: "white" }}
+          style={{ color: "black", marginLeft: 5 }}
           ref={txtRef}
           placeholderTextColor="#bdbdbd"
           autoCapitalize="none"
           placeholder={placeholder}
           keyboardType={keyboardType}
           textContentType={textContentType}
+          secureTextEntry={passwordToggle && !isPasswordVisible}
           onChangeText={onChangeText}
           onBlur={(e) => {
             setIsFocused(false);
@@ -104,6 +119,18 @@ const InputField = ({
             />
           </Animated.View>
         </PressEffect>
+      )}
+      {passwordToggle && (
+        <Pressable
+          onPress={togglePasswordVisibility}
+          style={{ marginHorizontal: 5 }}
+        >
+          <Ionicons
+            name={isPasswordVisible ? "eye-off" : "eye"}
+            size={25}
+            color={GlobalStyles.colors.gray200}
+          />
+        </Pressable>
       )}
     </View>
   );

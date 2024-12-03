@@ -87,8 +87,16 @@ const SignupForm = ({ navigation }) => {
               onChangeText={handleChange("fullname")}
               onBlur={handleBlur("fullname")}
               value={values.fullname}
-              inValid={values.fullname.length === 0 || values.fullname.length > 1}
-              containerStyle={{ margin: 10 }}
+              iconName="person-outline"
+              inValid={
+                values.fullname.length === 0 || values.fullname.length > 1
+              }
+              containerStyle={{
+                margin: 10,
+                marginTop: 0,
+                backgroundColor: GlobalStyles.colors.white,
+                borderColor: GlobalStyles.colors.gray200,
+              }}
             />
             {touched.fullname && errors.fullname && (
               <Text style={styles.errorText}>{errors.fullname}</Text>
@@ -101,8 +109,16 @@ const SignupForm = ({ navigation }) => {
               onChangeText={handleChange("username")}
               onBlur={handleBlur("username")}
               value={values.username}
-              inValid={values.username.length === 0 || values.username.length > 1}
-              containerStyle={{ margin: 10 }}
+              iconName="person-outline"
+              inValid={
+                values.username.length === 0 || values.username.length > 1
+              }
+              containerStyle={{
+                margin: 10,
+                marginTop: 5,
+                backgroundColor: GlobalStyles.colors.white,
+                borderColor: GlobalStyles.colors.gray200,
+              }}
             />
             {touched.username && errors.username && (
               <Text style={styles.errorText}>{errors.username}</Text>
@@ -115,8 +131,16 @@ const SignupForm = ({ navigation }) => {
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
               value={values.email}
-              inValid={values.email.length < 1 || !Validator.validate(values.email)}
-              containerStyle={{ margin: 10 }}
+              iconName="mail-outline"
+              inValid={
+                values.email.length < 1 || Validator.validate(values.email)
+              }
+              containerStyle={{
+                margin: 10,
+                marginTop: 5,
+                backgroundColor: GlobalStyles.colors.white,
+                borderColor: GlobalStyles.colors.gray200,
+              }}
             />
             {touched.email && errors.email && (
               <Text style={styles.errorText}>{errors.email}</Text>
@@ -129,14 +153,19 @@ const SignupForm = ({ navigation }) => {
               onChangeText={handleChange("password")}
               onBlur={handleBlur("password")}
               value={values.password}
-              inValid={values.password.length === 0 || values.password.length > 7}
-              containerStyle={{ margin: 10 }}
+              iconName="lock-closed-outline"
+              passwordToggle={true}
+              inValid={
+                values.password.length === 0 || values.password.length > 7
+              }
+              containerStyle={{
+                margin: 10,
+                marginTop: 5,
+                backgroundColor: GlobalStyles.colors.white,
+                borderColor: GlobalStyles.colors.gray200,
+              }}
             />
-            {touched.password && errors.password && (
-              <Text style={styles.errorText}>{errors.password}</Text>
-            )}
-
-            <View style={{ margin: 10, marginTop: 30 }}>
+            <View style={{ margin: 10, marginTop: 15 }}>
               <Button
                 title="Sign up"
                 onPress={handleSubmit}
@@ -145,13 +174,13 @@ const SignupForm = ({ navigation }) => {
             </View>
 
             <View style={styles.signupContainer}>
-              <Text style={{ color: GlobalStyles.colors.gray }}>
+              <Text style={{ color: GlobalStyles.colors.black, fontSize: 15 }}>
                 Already have an account?
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate("LoginScreen")}
               >
-                <Text style={{ color: "#6BB0F5" }}> Log in</Text>
+                <Text style={{ color: "#6BB0F5", fontSize: 15 }}> Log in</Text>
               </TouchableOpacity>
             </View>
           </>
@@ -165,13 +194,12 @@ export default SignupForm;
 
 const styles = StyleSheet.create({
   wrapper: {
-    // marginTop: 50,
+    marginLeft: 20,
+    marginRight: 20,
   },
-  inputField: {
+  InputField: {
     borderRadius: 4,
-    borderColor: "gray",
     padding: 8,
-    backgroundColor: "FAFAFA",
     marginBottom: 10,
     borderWidth: 1,
   },
@@ -179,6 +207,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: "center",
+    marginTop: 5,
   },
   errorText: {
     color: "red",

@@ -27,7 +27,14 @@ const Footer = ({ onPress }) => {
   });
 
   return (
-    <View style={{ justifyContent: "center", alignItems: "center" }}>
+    <View
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+        marginBottom: 10,
+      }}
+    >
       <Animated.View onTouchEnd={onPress} style={animatedStyle}>
         <Ionicons name="chevron-up-circle" size={30} color={"white"} />
       </Animated.View>

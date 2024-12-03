@@ -17,7 +17,6 @@ import { GlobalStyles } from "../../../constants/Styles";
 import ImageStory from "../../story/ImageStory";
 import { Ionicons } from "@expo/vector-icons";
 import PressEffect from "../../UI/PressEffect";
-// https://github.com/birdwingo/react-native-instagram-stories?tab=readme-ov-file
 
 const data = [
   {
@@ -115,26 +114,30 @@ const data = [
     ],
   },
 ];
+
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
-const ITEM_SIZE = SCREEN_WIDTH / 5;
-const TRANSLATE_VALUE = ITEM_SIZE / 2;
-export const CONTAINER_HEIGHT = ITEM_SIZE + TRANSLATE_VALUE + 10;
+const ITEM_SIZE = 82;
+const ITEMS_TO_SHOW = 5;
+const CONTAINER_WIDTH = ITEM_SIZE * ITEMS_TO_SHOW;
+export const CONTAINER_HEIGHT = ITEM_SIZE + 10;
 
 const Stories = ({ followingsData }) => {
   const storiesRef = useRef(null);
   const [showStory, setShowStory] = useState(false);
   const ScrollX = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
+
   return (
-    <View>
+    <View style={{ marginTop: 10 }}>
       <Animated.FlatList
         keyExtractor={(data, index) => index.toString()}
         data={data}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
-          height: CONTAINER_HEIGHT + 20,
-          paddingHorizontal: SCREEN_WIDTH / 2 - ITEM_SIZE / 2,
+          height: CONTAINER_HEIGHT + 5,
+          addingHorizontal: 20,
+          alignItems: "flex-start",
         }}
         snapToInterval={ITEM_SIZE}
         decelerationRate={"fast"}
@@ -142,11 +145,6 @@ const Stories = ({ followingsData }) => {
           [{ nativeEvent: { contentOffset: { x: ScrollX } } }],
           { useNativeDriver: true }
         )}
-        onMomentumScrollEnd={(event) => {
-          const index = Math.round(
-            event.nativeEvent.contentOffset.x / ITEM_SIZE
-          );
-        }}
         renderItem={({ item, index }) => {
           const inputRange = [
             (index - 2) * ITEM_SIZE,
@@ -157,18 +155,13 @@ const Stories = ({ followingsData }) => {
           ];
           const scale = ScrollX.interpolate({
             inputRange,
-            outputRange: [0.8, 0.8, 1, 0.8, 0.8],
+            outputRange: [0.9, 0.9, 0.9, 0.9, 0.9],
           });
           const translateY = ScrollX.interpolate({
             inputRange,
-            outputRange: [
-              0,
-              TRANSLATE_VALUE / 2,
-              TRANSLATE_VALUE,
-              TRANSLATE_VALUE / 2,
-              0,
-            ],
+            outputRange: [0, 0, 0, 0, 0],
           });
+
           return (
             <PressEffect>
               <Pressable
@@ -189,53 +182,72 @@ const Stories = ({ followingsData }) => {
                     height: ITEM_SIZE,
                     marginVertical: 5,
                   }}
-                  // onPress={() => {
-                  //   setShowStory(true);
-                  // }}
                 >
                   <ImageBackground
                     source={{ uri: item.user_image }}
                     style={{
                       width: "100%",
                       height: "100%",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                     imageStyle={[
                       {
                         resizeMode: "cover",
-                        borderRadius: 60,
+                        borderRadius: 50,
                         backgroundColor: GlobalStyles.colors.gray,
                       },
-                      item.user_id == 0 && {
-                        borderWidth: 2,
-                        borderColor: GlobalStyles.colors.magenta,
-                      },
+
+                      item.user_id == 0
+                        ? {} // Nếu là người đầu tiên, không có viền
+                        : {
+                            borderWidth: 3,
+                            borderColor: GlobalStyles.colors.blue100,
+                          },
                     ]}
                   >
                     <View
                       style={{
-                        width: "100%",
-                        height: "100%",
-                        alignItems: "flex-end",
-                        justifyContent: "flex-end",
+                        position: "absolute",
+                        bottom: 5,
+                        right: 5,
+                        justifyContent: "center",
+                        alignItems: "center",
                       }}
                     >
-                      {item.user_id == 0 && (
+                      {/* {item.user_id == 0 && (
                         <Ionicons
-                          style={{}}
                           name="add-circle"
                           size={25}
                           color={GlobalStyles.colors.magenta}
                         />
-                      )}
-                      {item.active && (
+                      )} */}
+
+                      {/* dấu hoạt động */}
+                      {/* {item.active && (
                         <Ionicons
-                          style={{ right: 3, bottom: 5 }}
                           name="ellipse"
                           size={15}
                           color={GlobalStyles.colors.greenLight}
                         />
-                      )}
+                      )} */}
                     </View>
+
+                    {/* Dấu cộng nếu là story đầu tiên */}
+                    {index === 0 && (
+                      <View
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          right: 8,
+                          backgroundColor: "white",
+                          borderRadius: 50,
+                          padding: 0,
+                        }}
+                      >
+                        <Ionicons name="add" size={20} color="black" />
+                      </View>
+                    )}
                   </ImageBackground>
                 </Animated.View>
               </Pressable>
