@@ -209,9 +209,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 5,
   },
-  errorText: {
-    color: "red",
-    fontSize: 12,
-    marginLeft: 22,
-  },
 });
