@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
+import { GlobalStyles } from "../../../constants/Styles";
 
 const { width } = Dimensions.get("window");
 

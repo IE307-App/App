@@ -21,11 +21,17 @@ const Header = ({ navigation }) => (
     </Pressable>
 
     <View style={{ alignItems: "center" }}>
-      <Text style={{ color: "white", fontSize: 30, fontWeight: "bold" }}>
-        Social
-      </Text>
-      <Text style={{ color: "rgba(255,255,255,0.5)", fontSize: 15 }}>
-        Welcome To Social
+      <Image
+        source={require("../../../assets/Logo_UIT.png")}
+        style={{
+          width: 40,
+          height: 40,
+          resizeMode: "contain",
+          marginTop: 5,
+        }}
+      />
+      <Text style={{ color: "rgba(255,255,255,0.5)", fontSize: 12 }}>
+        Welcome To UIT Social
       </Text>
     </View>
 

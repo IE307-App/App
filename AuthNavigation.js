@@ -5,9 +5,7 @@ import { AuthContext } from "./store/auth-context";
 const AuthNavigation = () => {
   const authCtx = useContext(AuthContext);
 
-  return (
-    <>{authCtx.isAuthenticated ? <SignedInStack /> : <SignedOutStack />}</>
-  );
+  return <>{authCtx.isAuthenticated ? <SignedInStack /> : <SignedInStack />}</>;
 };
 
 export default AuthNavigation;

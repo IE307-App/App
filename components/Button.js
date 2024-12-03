@@ -14,7 +14,7 @@ function Button({
     <View
       style={[
         {
-          backgroundColor: GlobalStyles.colors.blue,
+          backgroundColor: GlobalStyles.colors.blue3,
           borderRadius: 50,
           overflow: "hidden",
         },
