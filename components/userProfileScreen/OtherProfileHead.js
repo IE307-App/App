@@ -33,7 +33,12 @@ const OtherProfileHead = ({ userData, viewMode }) => {
       </Pressable>
     );
   }
-  const handleEditPress = () => {
+  const checkFollowed = () => {
+    // Kiểm tra xem người dùng đã theo dõi chưa
+    
+    // Phải thêm code này vào hàm checkFollowed để thực hiện kiểm tra
+  };
+  const handleChat = () => {
     if (viewMode) {
       // Nếu ở chế độ xem, chuyển hướng tới tin nhắn
       navigation.navigate("MessagesScreen");
@@ -42,6 +47,10 @@ const OtherProfileHead = ({ userData, viewMode }) => {
       logout();
       navigation.navigate("LoginScreen"); // Sau khi logout, chuyển hướng đến màn hình đăng nhập
     }
+  };
+  const handleFollow = (userData) => {
+
+    
   };
 
 
