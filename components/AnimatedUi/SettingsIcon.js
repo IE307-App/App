@@ -32,7 +32,7 @@ const SettingsIcon = ({ color = "white", onPress }) => {
 
   return (
     <Animated.View onTouchEnd={handlePress} style={[animatedStyle]}>
-      <Ionicons name="settings" color={color} size={30} />
+      <Ionicons name="log-out-outline" color={color} size={30} />
     </Animated.View>
   );
 };

@@ -27,8 +27,8 @@ const TabBar = ({ state, descriptors, navigation }) => {
 
     {
       name: "Reels",
-      icon: require("../../assets/reels-focused.png"),
-      iconUnfocued: require("../../assets/reels.png"),
+      icon: require("../../assets/notifi.png"),
+      iconUnfocued: require("../../assets/notifi.png"),
     },
     {
       name: "Chat",
