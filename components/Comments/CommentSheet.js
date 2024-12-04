@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import ActionSheet from "react-native-actions-sheet";
 import { Ionicons } from "@expo/vector-icons";
@@ -6,9 +6,12 @@ import CommentCard from "./CommentCard";
 import { GlobalStyles } from "../../constants/Styles";
 import { FlatList } from "react-native-gesture-handler";
 import commentService from "../../src/services/comment.service";
+import { AuthContext } from "../../store/auth-context";
 function CommentSheet({postId, visible, setVisible }) {
   const [comment, setComment] = useState("");
   const [listComments, setComments] = useState([]);
+  const { handleAddComment} = useContext(AuthContext); 
+
   const actionSheetRef = useRef(null);
   useEffect(() => {
     
@@ -43,6 +46,7 @@ function CommentSheet({postId, visible, setVisible }) {
       if (response) {
         setComments((prevComments) => [response, ...prevComments]);
         setComment(""); 
+        handleAddComment();
       }
     } catch (error) {
       console.error("Error adding comment: ", error);

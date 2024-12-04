@@ -12,6 +12,7 @@ export const AuthContext = createContext({
   addNotification: () => {},
   notifications: [],
   addComment: false,
+  handleAddComment: () => {},
 });
 
 const ApiUrl = serverLink;
@@ -53,7 +54,7 @@ function AuthContentProvider({ children }) {
       console.error("Lỗi khi xác thực:", error);
     }
   };
-  const handleAddComment = () => {
+  const handleAddComment = async() => {
     setAddComment(!addComment);
   }
 
