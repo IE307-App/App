@@ -61,7 +61,7 @@ const ChatScreen = ({ navigation, route }) => {
     if (userChat) {
       navigation.setOptions({
         headerShown: true,
-        title: userChat.name || "John Doe",  
+        title: userChat.name || "John Daoe",  
       });
     }
   }, [userChat]);

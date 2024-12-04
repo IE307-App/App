@@ -23,46 +23,49 @@ const data = [
   {
     user_id: 0,
     user_image:
-      "https://p16.tiktokcdn.com/tos-maliva-avt-0068/2f134ee6b5d3a1340aeb0337beb48f2d~c5_720x720.jpeg",
-    user_name: "Ajmal",
+      "https://i.pinimg.com/474x/4d/7b/64/4d7b649354f648c90c75f0db9a8fb572.jpg",
+    user_name: "Pham Vu",
     active: false,
     stories: [
       {
         story_id: 1,
         story_image:
-          "https://image.freepik.com/free-vector/universe-mobile-wallpaper-with-planets_79603-600.jpg",
+          "https://i.pinimg.com/474x/4d/7b/64/4d7b649354f648c90c75f0db9a8fb572.jpg",
       },
     ],
   },
   {
     user_id: 1,
-    user_image: "https://randomuser.me/api/portraits/women/2.jpg",
-    user_name: "Ajmal",
+    user_image:
+      "https://i.pinimg.com/474x/71/2a/72/712a725ea92a2ba21a81f98adfc95bd3.jpg",
+    user_name: "Tan Anh",
     active: false,
     stories: [
       {
         story_id: 1,
         story_image:
-          "https://image.freepik.com/free-vector/universe-mobile-wallpaper-with-planets_79603-600.jpg",
+          "https://i.pinimg.com/474x/03/f5/90/03f59014283e2544f0a4fc9425e81dc4.jpg",
       },
     ],
   },
   {
     user_id: 2,
-    user_image: "https://randomuser.me/api/portraits/women/5.jpg",
-    user_name: "Ajmal",
+    user_image:
+      "https://i.pinimg.com/474x/37/d1/f4/37d1f41e1b6beb4b2d4a98c86514680b.jpg",
+    user_name: "Ctuong",
     stories: [
       {
         story_id: 1,
         story_image:
-          "https://image.freepik.com/free-vector/universe-mobile-wallpaper-with-planets_79603-600.jpg",
+          "https://i.pinimg.com/474x/22/bb/b4/22bbb4a05f032051d24f372b6c48bf0f.jpg",
       },
     ],
   },
   {
     user_id: 3,
-    user_image: "https://randomuser.me/api/portraits/women/8.jpg",
-    user_name: "Ajmal",
+    user_image:
+      "https://i.pinimg.com/474x/0c/53/d5/0c53d5e9f9b6e6074a60956c58edf143.jpg",
+    user_name: "Ttrang",
     active: true,
 
     stories: [
@@ -75,7 +78,8 @@ const data = [
   },
   {
     user_id: 4,
-    user_image: "https://randomuser.me/api/portraits/women/10.jpg",
+    user_image:
+      "https://i.pinimg.com/474x/ff/6a/4e/ff6a4e588f337e5d45c999f826d85e16.jpg",
     user_name: "Ajmal",
     active: false,
 
@@ -83,13 +87,14 @@ const data = [
       {
         story_id: 1,
         story_image:
-          "https://image.freepik.com/free-vector/universe-mobile-wallpaper-with-planets_79603-600.jpg",
+          "https://i.pinimg.com/474x/40/12/16/4012166bf8090f0b2d3ae455b23cde84.jpg",
       },
     ],
   },
   {
     user_id: 5,
-    user_image: "https://randomuser.me/api/portraits/women/25.jpg",
+    user_image:
+      "https://i.pinimg.com/474x/22/bb/b4/22bbb4a05f032051d24f372b6c48bf0f.jpg",
     user_name: "Ajmal",
     active: false,
 
@@ -103,14 +108,15 @@ const data = [
   },
   {
     user_id: 6,
-    user_image: "https://randomuser.me/api/portraits/women/52.jpg",
+    user_image:
+      "https://i.pinimg.com/474x/22/bb/b4/22bbb4a05f032051d24f372b6c48bf0f.jpg",
     user_name: "Ajmal",
     active: false,
     stories: [
       {
         story_id: 1,
         story_image:
-          "https://image.freepik.com/free-vector/universe-mobile-wallpaper-with-planets_79603-600.jpg",
+          "https://i.pinimg.com/474x/22/bb/b4/22bbb4a05f032051d24f372b6c48bf0f.jpg",
       },
     ],
   },
