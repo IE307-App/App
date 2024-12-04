@@ -9,7 +9,8 @@ const postService = {
             const token = await AsyncStorage.getItem('token');
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             const response = await axiosInstance.get("api/post/all");
-            return response.data;
+            // đảo ngược mảng
+            return response.data.reverse();
         } catch (error) {
             console.error("Get post error:", error.response?.data || error.message);
             throw error;
