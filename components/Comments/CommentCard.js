@@ -1,14 +1,15 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { GlobalStyles } from "../../constants/Styles";
 import { USERS } from "../../data/users";
-function CommentCard() {
+import moment from "moment";
+function CommentCard({comment}) {
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "row" }}>
         <Image
-          source={{ uri: USERS[1].image }}
+          source={{ uri: comment.userDto.imageURL }}
           style={{
             width: 50,
             height: 50,
@@ -23,9 +24,11 @@ function CommentCard() {
             justifyContent: "center",
           }}
         >
-          <Text style={{ fontWeight: "bold", fontSize: 14, color: "white" }}>
-            John Doe asdlaksm aslkdmsdksad as
-            aaksjdlmakjndsmlasknjdlmlskcnmsalmcksacansldsakdalsdlnsdksadm;samdas;dm;
+          <Text style={{ fontWeight: "bold", fontSize: 16, color: "white", marginBottom: 10 }}>
+            {comment.userDto.name}
+          </Text>
+          <Text style={{  fontSize: 14, color: "white" }}>
+            {comment.content}
           </Text>
           <Text
             style={{
@@ -34,7 +37,7 @@ function CommentCard() {
               alignSelf: "flex-end",
             }}
           >
-            2 minutes Ago
+            {moment(comment.createdAt).format("HH:mm, DD/MM/YYYY")}
           </Text>
         </View>
       </View>
