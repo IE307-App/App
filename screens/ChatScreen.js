@@ -34,7 +34,7 @@ const ChatScreen = ({ navigation, route }) => {
   // hàm get chat id sau đó từ chat id get tin nhắn
   async function getMessagesByChatId(userId) {
     try {
-      const chatId = await chatService.getChatByUserId(userId, userId); 
+      const chatId = await chatService.getChatByUserId(userId); 
       if (chatId > 0) {
         setChatId(chatId); 
         const messages = await chatService.getMessagesByChatId(chatId);
