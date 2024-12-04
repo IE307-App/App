@@ -20,7 +20,6 @@ import { LinearGradient } from "expo-linear-gradient";
 const { height, width } = Dimensions.get("window");
 import postService from "../../../src/services/post.service";
 function PostAdvance({ post }) {
-  // const authCtx = useContext(AuthContext);
   useEffect(() => {
     console.log("Post Advance", post.id);
   }, []);
@@ -191,6 +190,8 @@ function PostAdvance({ post }) {
     const [liked, setLiked] = useState(false);
 
     const [totalLikes, setTotalLikes] = useState(post.likeByUser.length || 0); 
+    const [totalComments, setTotalcomments] = useState(post.comments.length || 0); 
+
     const [showComments, setShowComments] = useState(false);
 
     const handleLike = async (postId) => {

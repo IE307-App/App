@@ -11,6 +11,8 @@ export const AuthContext = createContext({
   logout: () => {},
   addNotification: () => {},
   notifications: [],
+  addComment: false,
+  handleAddComment: () => {},
 });
 
 const ApiUrl = serverLink;
@@ -19,6 +21,7 @@ function AuthContentProvider({ children }) {
   const [userData, setUserData] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [notifications, setNotifications] = useState([]); // Danh sách thông báo
+  const [addComment, setAddComment] = useState(false);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -51,6 +54,9 @@ function AuthContentProvider({ children }) {
       console.error("Lỗi khi xác thực:", error);
     }
   };
+  const handleAddComment = async() => {
+    setAddComment(!addComment);
+  }
 
   const logout = async () => {
     try {
@@ -93,6 +99,7 @@ function AuthContentProvider({ children }) {
     notifications: notifications, // Truyền danh sách thông báo
     addNotification: addNotification, // Hàm để thêm thông báo
     handleFollowUser: handleFollowUser, // Hàm theo dõi người dùng
+    handleAddComment: handleAddComment,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
