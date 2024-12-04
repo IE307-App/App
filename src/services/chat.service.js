@@ -29,11 +29,11 @@ const chatService = {
     },
 
     // Lấy thông tin chat theo ID
-    async getChatById(chatId) {
+    async getChatByUserId(userId) {
         try {
             const token = await AsyncStorage.getItem('token');
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            const response = await axiosInstance.get(`api/chat/${chatId}`);
+            const response = await axiosInstance.get(`api/chat/getChatId/${userId}`);
             return response.data;
         } catch (error) {
             console.error("Get chat by ID error:", error.response?.data || error.message);
@@ -50,6 +50,32 @@ const chatService = {
             return response.data;
         } catch (error) {
             console.error("Get chats by user error:", error.response?.data || error.message);
+            throw error;
+        }
+    },
+    //lấy tin nhắn theo chat id
+    async getMessagesByChatId(chatId) {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const response = await axiosInstance.get(`api/message/chat/${chatId}`);
+            return response.data;
+        } catch (error) {
+            console.error("Get messages by chat id error:", error.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    // gửi tin nhắn
+    async sendMessage(message) {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+   
+            const response = await axiosInstance.post('api/message/send', message);
+            return response.data;
+        } catch (error) {
+            console.error("Send message error:", error.response?.data || error.message);
             throw error;
         }
     },
