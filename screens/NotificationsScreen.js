@@ -22,8 +22,8 @@ const NotificationsScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={GlobalStyles.colors.primary} />
-      <NotificationCard mode="LIKE" />
-      <NotificationCard mode="COMMENT" />
+      {/* <NotificationCard mode="LIKE" />
+      <NotificationCard mode="COMMENT" /> */}
       <NotificationCard mode="FOLLOW" />
     </View>
   );
