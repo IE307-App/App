@@ -71,7 +71,7 @@ const chatService = {
         try {
             const token = await AsyncStorage.getItem('token');
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            console.log(message);
+   
             const response = await axiosInstance.post('api/message/send', message);
             return response.data;
         } catch (error) {

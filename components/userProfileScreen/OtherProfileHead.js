@@ -26,7 +26,6 @@ const OtherProfileHead = ({ userData, viewMode }) => {
       // Kiểm tra trạng thái follow từ userService (server)
       const followStatus = await userService.checkFollowUser(userData.id);
       setIsFollowed(followStatus);  // Cập nhật trạng thái follow
-      console.log(followStatus ? "Followed" : "Not Followed");
     } catch (error) {
       console.error("Lỗi khi kiểm tra trạng thái follow:", error);
     }
@@ -43,11 +42,7 @@ const OtherProfileHead = ({ userData, viewMode }) => {
   );
 
   const handleChat = () => {
-    if (viewMode) {
-      navigation.navigate("MessagesScreen");
-    } else {
-      navigation.navigate("LoginScreen");
-    }
+    navigation.navigate("ChatScreen", { userId: userData.id })
   };
 
   const handleFollow = async () => {
@@ -56,7 +51,6 @@ const OtherProfileHead = ({ userData, viewMode }) => {
       await userService.followUser(userData.id, newFollowStatus); // Gọi API để follow/unfollow
       setIsFollowed(newFollowStatus);  // Cập nhật trạng thái local
       await AsyncStorage.setItem(`followed-${userData.id}`, JSON.stringify(newFollowStatus));
-      console.log(newFollowStatus ? "Followed user" : "Unfollowed user");
     } catch (error) {
       console.error("Lỗi khi theo dõi người dùng:", error);
     }
@@ -97,7 +91,7 @@ const OtherProfileHead = ({ userData, viewMode }) => {
           {viewMode && (
             <View style={{ position: "absolute", left: 0, top: 5, transform: [{ rotateY: "180deg" }] }}>
               <PressEffect>
-                <Pressable onPress={() => navigation.navigate("MessagesScreen")}>
+                <Pressable onPress={() => navigation.navigate("ChatScreen", { userId: userData.id })}>
                   <Image
                     source={require("../../assets/chat-focused.png")}
                     style={{ width: 30, height: 30, tintColor: "white" }}
