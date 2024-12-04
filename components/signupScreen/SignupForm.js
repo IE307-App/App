@@ -115,7 +115,7 @@ const SignupForm = ({ navigation }) => {
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
               value={values.email}
-              inValid={values.email.length < 1 || !Validator.validate(values.email)}
+           
               containerStyle={{ margin: 10 }}
             />
             {touched.email && errors.email && (
@@ -129,7 +129,7 @@ const SignupForm = ({ navigation }) => {
               onChangeText={handleChange("password")}
               onBlur={handleBlur("password")}
               value={values.password}
-              inValid={values.password.length === 0 || values.password.length > 7}
+              inValid={values.password.length === 0 || values.password.length > 4}
               containerStyle={{ margin: 10 }}
             />
             {touched.password && errors.password && (
