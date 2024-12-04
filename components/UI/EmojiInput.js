@@ -18,14 +18,14 @@ const EmojiInput = ({ opacity = 1 }) => {
   const [HEIGHT, setHEIGHT] = useState(
     ITEM_SIZE + (TRANSLATE_VALUE * LENGTH) / 2 + MARIN_VER + INPUT_HEIGHT
   );
-  const path = `
-    M0,${TRANSLATE_VALUE * 5}
-    Q${WIDTH * 0.4},0 ${WIDTH / 2},${0}
-    Q${WIDTH * 0.6},0 ${WIDTH},${TRANSLATE_VALUE * 5}
-    V${HEIGHT}
-    H0
-  Z
-    `;
+  // const path = `
+  //   M0,${TRANSLATE_VALUE * 5}
+  //   Q${WIDTH * 0.4},0 ${WIDTH / 2},${0}
+  //   Q${WIDTH * 0.6},0 ${WIDTH},${TRANSLATE_VALUE * 5}
+  //   V${HEIGHT}
+  //   H0
+  // Z
+  //   `;
   return (
     <View
       onLayout={(e) => {
@@ -38,13 +38,13 @@ const EmojiInput = ({ opacity = 1 }) => {
         height={HEIGHT}
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
       >
-        <Path
+        {/* <Path
           d={path}
           fill={GlobalStyles.colors.primary500}
           opacity={opacity}
           strokeWidth={1}
           stroke={GlobalStyles.colors.primary600}
-        />
+        /> */}
       </Svg>
 
       <View style={{ flexDirection: "row", marginVertical: MARIN_VER }}>
@@ -69,7 +69,7 @@ const EmojiInput = ({ opacity = 1 }) => {
               }}
             >
               <Text key={index} style={{ fontSize: ITEM_SIZE / 1.5 }}>
-                {EMOJIS[index]}
+                {/* {EMOJIS[index]} */}
               </Text>
             </View>
           );
@@ -83,6 +83,11 @@ const EmojiInput = ({ opacity = 1 }) => {
           marginTop: 0,
           fontSize: 14,
           padding: 0,
+          marginBottom: 70,
+          backgroundColor: GlobalStyles.colors.primary500,
+          height: 50,
+          width: WIDTH - 120,
+          borderRadius: 20
         }}
         placeholderTextColor="#bdbdbd"
         autoCapitalize="none"

@@ -20,7 +20,10 @@ import { LinearGradient } from "expo-linear-gradient";
 const { height, width } = Dimensions.get("window");
 import postService from "../../../src/services/post.service";
 function PostAdvance({ post }) {
-  const authCtx = useContext(AuthContext);
+  // const authCtx = useContext(AuthContext);
+  useEffect(() => {
+    console.log("Post Advance", post.id);
+  }, []);
 
   function Avatar() {
     const navigation = useNavigation();
@@ -237,7 +240,7 @@ function PostAdvance({ post }) {
 
     return (
       <>
-        <CommentSheet visible={showComments} setVisible={setShowComments} />
+        <CommentSheet postId={post.id} visible={showComments} setVisible={setShowComments} />
         <View
           style={{
             flexDirection: "row",

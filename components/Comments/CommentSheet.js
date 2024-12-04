@@ -1,23 +1,53 @@
 import React, { useRef, useEffect, useState } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import ActionSheet from "react-native-actions-sheet";
 import { Ionicons } from "@expo/vector-icons";
 import CommentCard from "./CommentCard";
 import { GlobalStyles } from "../../constants/Styles";
 import { FlatList } from "react-native-gesture-handler";
-import InputField from "../InputField";
-import EmojiInput from "../UI/EmojiInput";
-
-function CommentSheet({ visible, setVisible }) {
+import commentService from "../../src/services/comment.service";
+function CommentSheet({postId, visible, setVisible }) {
   const [comment, setComment] = useState("");
+  const [listComments, setComments] = useState([]);
   const actionSheetRef = useRef(null);
   useEffect(() => {
+    
+  
     if (visible) {
+      fetchComments();
       actionSheetRef.current?.setModalVisible(true);
     } else {
       actionSheetRef.current?.setModalVisible(false);
     }
-  }, [visible]);
+  }, [visible, postId]);
+  const fetchComments = async () => {
+    try {
+      const response = await commentService.getAllCommentsByPost(postId);
+      setComments(response);
+    } catch (error) {
+      console.error("Error fetching comments: ", error);
+    }
+  };
+  
+  const hanldeComment = async() =>{
+    if (comment.trim() === "") {
+      return;
+    }
+
+    const newComment = {
+      content: comment,
+    };
+
+    try {
+      const response =  await commentService.createComment(postId, newComment);
+      if (response) {
+        setComments((prevComments) => [response, ...prevComments]);
+        setComment(""); 
+      }
+    } catch (error) {
+      console.error("Error adding comment: ", error);
+    }
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -40,11 +70,12 @@ function CommentSheet({ visible, setVisible }) {
       >
         <FlatList
           keyExtractor={(item, index) => index.toString()}
-          data={[1, 2, 3, 4, 5, 6, 7, 7, 8, 9, 5]}
+          data={listComments}
           renderItem={({ item, index }) => {
-            return <CommentCard />;
+            return <CommentCard comment={item}  />;
           }}
         />
+        
         <View
           style={{
             flexDirection: "row",
@@ -53,26 +84,35 @@ function CommentSheet({ visible, setVisible }) {
             marginHorizontal: 10,
           }}
         >
-          {/* <View style={{ flex: 1, marginVertical: 10 }}>
-            <InputField
-              onChangeText={setComment}
-              value={comment}
-              placeholder="Type Somthing"
-              keyboardType="default"
-              inValid={true}
-            />
+          <View style={{ flex: 1, marginVertical: 10 }}>
+          <TextInput 
+            value={comment}
+            onChangeText={(text) => {
+              setComment(text);
+            }}
+            placeholder="InputText"
+            placeholderTextColor="rgba(255,255,255,0.5)"
+            
+            style={{
+              color: "white",
+              borderWidth: 1, 
+              borderColor: 'gray', 
+              padding: 10, 
+              borderRadius: 5
+            }}
+          />
           </View>
           <View
             style={{
               backgroundColor: "rgba(122, 64, 248,0.5)",
               padding: 10,
               borderRadius: 50,
-              marginLeft: 10,
+              marginLeft: 20,
             }}
           >
-            <Ionicons name="send" color={"white"} size={30} />
-          </View> */}
-          <EmojiInput />
+            <Ionicons onPress={hanldeComment}
+             name="send" color={"white"} size={30}  marginLeft ={18} />
+          </View>
         </View>
       </ActionSheet>
     </View>
