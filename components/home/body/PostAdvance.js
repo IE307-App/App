@@ -19,8 +19,13 @@ import PressEffect from "../../UI/PressEffect";
 import { LinearGradient } from "expo-linear-gradient";
 const { height, width } = Dimensions.get("window");
 import postService from "../../../src/services/post.service";
+import commentService from "../../../src/services/comment.service";
 function PostAdvance({ post }) {
   const authCtx = useContext(AuthContext);
+  const [Comments, setComments] = useState([]);
+  useEffect(() => {
+    setComments(commentService.getAllCommentsByPost(post.id));
+  }, []);
 
   function Avatar() {
     const navigation = useNavigation();
