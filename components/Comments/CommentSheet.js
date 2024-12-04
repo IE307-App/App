@@ -48,7 +48,7 @@ function CommentSheet({ postId, visible, setVisible }) {
         // Cập nhật lại danh sách comment sau khi thêm comment mới
         setComments((prevComments) => [response, ...prevComments]);
         setComment(""); // Xóa nội dung nhập vào
-        // handleAddComment(); // Gọi handleAddComment để làm mới danh sách
+        handleAddComment(); // Gọi handleAddComment để làm mới danh sách
       }
     } catch (error) {
       console.error("Error adding comment: ", error);
