@@ -21,14 +21,14 @@ const TabBar = ({ state, descriptors, navigation }) => {
     },
     {
       name: "Explore",
-      icon: require("../../assets/explore-focused.png"),
-      iconUnfocued: require("../../assets/explore.png"),
+      icon: require("../../assets/robot-assistant.png"),
+      iconUnfocued: require("../../assets/robotic.png"),
     },
 
     {
       name: "Reels",
-      icon: require("../../assets/reels-focused.png"),
-      iconUnfocued: require("../../assets/reels.png"),
+      icon: require("../../assets/notifi.png"),
+      iconUnfocued: require("../../assets/notifi.png"),
     },
     {
       name: "Chat",

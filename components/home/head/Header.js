@@ -27,12 +27,12 @@ const Header = ({ navigation }) => {
       </Pressable>
 
       <View style={{ alignItems: "center" }}>
-        <Text style={{ color: "white", fontSize: 30, fontWeight: "bold" }}>
-          Social
+        <Text style={{ color: "white", fontSize: 30, fontWeight: "bold",marginTop: 10  }}>
+          UIT
         </Text>
-        <Text style={{ color: "rgba(255,255,255,0.5)", fontSize: 15 }}>
+        {/* <Text style={{ color: "rgba(255,255,255,0.5)", fontSize: 15 }}>
           Welcome To Social
-        </Text>
+        </Text> */}
       </View>
 
       <View style={styles.iconsContainer}>

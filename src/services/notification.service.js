@@ -21,7 +21,7 @@ const notificationService = {
             const token = await AsyncStorage.getItem('token');
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             const response = await axiosInstance.get('api/notifications');
-            return response.data;
+            return response.data.reverse();
         } catch (error) {
             console.error("Get notifications error:", error.response?.data || error.message);
             throw error;

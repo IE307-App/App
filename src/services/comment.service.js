@@ -73,7 +73,6 @@ const commentService = {
             const token = await AsyncStorage.getItem('token');
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             const response = await axiosInstance.get(`api/comment/all/${postId}`);
-            console.log('comment----------',response);
             return response.data;
         } catch (error) {
             console.error("Get all comments by post error:", error.response?.data || error.message);
