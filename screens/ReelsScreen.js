@@ -1,193 +1,133 @@
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   StyleSheet,
   FlatList,
-  FlatListProps,
+  TouchableOpacity,
+  Text,
+  Animated,
   StatusBar,
 } from "react-native";
-
-import { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import VideoPost from "../components/reelsScreen/VideoPost";
+import { Linking } from "react-native";
 import { GlobalStyles } from "../constants/Styles";
-import { Animated } from "react-native";
 
+// Cập nhật dữ liệu thông báo
 const dummyPosts = [
   {
-    id: "2",
-    video:
-      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/vertical-videos/2.mp4",
-    title: "My New Year View",
-    date: "1 Jan, 2022",
-    location: "New York, USA",
-  },
-  {
     id: "1",
-    video:
-      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/vertical-videos/1.mp4",
-    title: "Some Workout",
-    date: "31 Dec, 2024",
-    location: "Omsk, Russia",
-  },
-  {
-    id: "3",
-    video:
-      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/vertical-videos/3.mp4",
-    title: "Some Workout",
-    date: "31 Dec, 2024",
-    location: "Omsk, Russia",
+    title: "Thông báo kết quả tuyển chọn chính thức lớp Huredee VI",
+    date: "04/12/2024 - 13:49",
+    location: "Mới",
+    link: "https://student.uit.edu.vn/thong-bao-ket-qua-tuyen-chon-chinh-thuc-lop-huredee-vi",
   },
   {
     id: "2",
-    video:
-      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/vertical-videos/2.mp4",
-    title: "My New Year View",
-    date: "1 Jan, 2022",
-    location: "New York, USA",
-  },
-  {
-    id: "1",
-    video:
-      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/vertical-videos/1.mp4",
-    title: "Some Workout",
-    date: "31 Dec, 2024",
-    location: "Omsk, Russia",
+    title: "Thông báo lịch thi cuối kỳ học kỳ 1 năm học 2024-2025",
+    date: "14/11/2024 - 15:38",
+    location: "Mới",
+    link: "https://student.uit.edu.vn/thong-bao-lich-thi-cuoi-ky-hoc-ky-1-nam-hoc-2024-2025",
   },
   {
     id: "3",
-    video:
-      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/vertical-videos/3.mp4",
-    title: "Some Workout",
-    date: "31 Dec, 2024",
-    location: "Omsk, Russia",
+    title: "Thông báo Quyết định công nhận Tốt nghiệp đợt 4 năm 2024",
+    date: "13/11/2024 - 14:55",
+    location: "Mới",
+    link: "https://student.uit.edu.vn/thong-bao-quyet-dinh-cong-nhan-tot-nghiep-dot-4-nam-2024",
   },
   {
-    id: "2",
-    video:
-      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/vertical-videos/2.mp4",
-    title: "My New Year View",
-    date: "1 Jan, 2022",
-    location: "New York, USA",
+    id: "4",
+    title: "[UIT-TALENTBRIDGE] Tham gia khảo sát CTĐT nhân lực ưu tú hướng doanh nghiệp",
+    date: "12/11/2024 - 09:26",
+    location: "Mới",
+    link: "https://student.uit.edu.vn/uit-talentbridge-tham-gia-khao-sat-ctdt-nhan-luc-uu-tu-huong-doanh-nghiep",
   },
   {
-    id: "1",
-    video:
-      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/vertical-videos/1.mp4",
-    title: "Some Workout",
-    date: "31 Dec, 2024",
-    location: "Omsk, Russia",
+    id: "5",
+    title: "Thông báo Danh sách sinh viên dự kiến TN đợt 4 năm 2024",
+    date: "07/11/2024 - 08:35",
+    location: "Mới",
+    link: "https://student.uit.edu.vn/thong-bao-danh-sach-sinh-vien-du-kien-tn-dot-4-nam-2024",
   },
   {
-    id: "3",
-    video:
-      "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/vertical-videos/3.mp4",
-    title: "Some Workout",
-    date: "31 Dec, 2024",
-    location: "Omsk, Russia",
+    id: "6",
+    title: "Thông báo lịch thi tập trung Giữa kỳ Đợt 2 học kỳ 1 năm học 2024-2025",
+    date: "29/10/2024 - 15:18",
+    location: "",
+    link: "https://student.uit.edu.vn/thong-bao-lich-thi-tap-trung-giua-ky-dot-2-hoc-ky-1-nam-hoc-2024-2025-danh-cho-khoa-tuyen-sinh-nam",
   },
-  // {
-  //   id: "3",
-  //   video:
-  //     "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/vertical-videos/3.mp4",
-  //   // video: require("./storage/videos/video3.mp4"),
-
-  //   caption: "Hola",
-  // },
-  // {
-  //   id: "4",
-  //   video:
-  //     "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/vertical-videos/4.mp4",
-  //   // video: require("./storage/videos/video4.mp4"),
-
-  //   caption: "Piano practice",
-  // },
-  // {
-  //   id: "5",
-  //   video:
-  //     "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/vertical-videos/5.mp4",
-  //   // video: require("./storage/videos/video1.mp4"),
-
-  //   caption: "Hello World!",
-  // },
+  {
+    id: "7",
+    title: "Tuyển sinh Khóa học tiếng Nhật (miễn phí) Khóa VI và giới thiệu việc làm tại Nhật Bản - tài trợ bởi Huredee",
+    date: "11/10/2024 - 08:17",
+    location: "",
+    link: "https://student.uit.edu.vn/tuyen-sinh-khoa-hoc-tieng-nhat-mien-phi-khoa-vi-va-gioi-thieu-viec-lam-tai-nhat-ban-tai-tro-boi",
+  }
 ];
 
-const ITEM_SIZE =
-  GlobalStyles.styles.windowHeight - GlobalStyles.styles.tabBarPadding + 25;
+const ITEM_SIZE = GlobalStyles.styles.windowHeight - GlobalStyles.styles.tabBarPadding + 25;
 
 const ReelsScreen = () => {
-  const [activePostId, setActivePostId] = useState(dummyPosts[0].id);
   const [posts, setPosts] = useState([]);
-  const ScrollY = useRef(new Animated.Value(0)).current;
+  const ScrollY = useRef(new Animated.Value(0)).current; // Khởi tạo ScrollY
 
   useEffect(() => {
     const fetchPosts = async () => {
-      // fetch posts from the server
-      setPosts(dummyPosts);
+      setPosts(dummyPosts); // Set the dummy posts
     };
-
     fetchPosts();
   }, []);
 
-  const viewabilityConfigCallbackPairs = useRef([
-    {
-      viewabilityConfig: { itemVisiblePercentThreshold: 50 },
-      onViewableItemsChanged: ({ changed, viewableItems }) => {
-        if (viewableItems.length > 0 && viewableItems[0].isViewable) {
-          setActivePostId(viewableItems[0].item.id);
-        }
-      },
-    },
-  ]);
+  // Sự kiện khi nhấn vào thông báo
+  const handleNotificationPress = (link) => {
+    Linking.openURL(link); // Mở đường dẫn
+  };
 
-  const onEndReached = () => {
-    // fetch more posts from database
-    // setPosts((currentPosts) => [...currentPosts, ...dummyPosts]);
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.container}>
+        <View style={{ flexDirection: "row", width: "80%" }}>
+          <View style={{ marginHorizontal: 20, justifyContent: "space-between" }}>
+            <View style={{ marginBottom: 10 }}>
+              <Text style={{ fontWeight: "bold", fontSize: 15, color: "white" }}>
+                {item.title}
+              </Text>
+            </View>
+
+            <Text style={{ fontSize: 12, color: "gray" }}>{item.date}</Text>
+          </View>
+        </View>
+
+        {/* Hiển thị "Mới" nếu có thông báo mới */}
+        {item.location && (
+          <View style={styles.newBadge}>
+            <Text style={styles.newBadgeText}>Mới</Text>
+          </View>
+        )}
+
+        <TouchableOpacity
+          onPress={() => handleNotificationPress(item.link)}
+          style={{ width: "20%", height: 80 }}
+        >
+          <Text style={{ color: "white", fontSize: 16, textAlign: "center", marginTop:30 }}>Xem</Text>
+        </TouchableOpacity>
+      </View>
+    );
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={"black"} />
-
-      <Animated.FlatList
+    <SafeAreaView style={{ flex: 1, backgroundColor: GlobalStyles.colors.primary }}>
+      <FlatList
         data={posts}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingTop: 10 }}
+        showsVerticalScrollIndicator={false}
+        // Thêm tính năng cuộn mượt
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: ScrollY } } }],
-          { useNativeDriver: true }
+          { useNativeDriver: false }
         )}
-        renderItem={({ item, index }) => {
-          const inputRange = [
-            (index - 1) * ITEM_SIZE,
-            index * ITEM_SIZE,
-            (index + 1) * ITEM_SIZE,
-          ];
-          const scale = ScrollY.interpolate({
-            inputRange,
-            outputRange: [1, 1, 0.7],
-          });
-          const translateY = ScrollY.interpolate({
-            inputRange,
-            outputRange: [0, 0, ITEM_SIZE / 2],
-          });
-          return (
-            <Animated.View
-              style={{
-                transform: [{ scale }, { translateY }],
-              }}
-            >
-              <VideoPost
-                post={item}
-                activePostId={activePostId}
-                index={index}
-              />
-            </Animated.View>
-          );
-        }}
-        keyExtractor={(item, index) => `${item.id}-${index}`}
-        pagingEnabled
-        viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-        showsVerticalScrollIndicator={false}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={3}
       />
     </SafeAreaView>
   );
@@ -195,9 +135,28 @@ const ReelsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "black",
-    paddingBottom: GlobalStyles.styles.tabBarPadding - 25,
+    backgroundColor: GlobalStyles.colors.primary500,
+    borderRadius: 20,
+    marginHorizontal: 10,
+    marginVertical: 5,
+    padding: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  newBadge: {
+    backgroundColor: "red",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 15,
+    position: "absolute",
+    top: 10,
+    right: 10,
+  },
+  newBadgeText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 12,
   },
 });
 
