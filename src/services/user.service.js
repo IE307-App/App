@@ -99,22 +99,37 @@ const userService = {
             throw error;
         }
     },
-
-    // Unfollow một người dùng
-    async unfollowUser(userId) {
+    // kiểm tra đã follow chưa
+    async checkFollowUser(userId) {
         try {
             const token = await AsyncStorage.getItem('token');
             if (!token) {
                 throw new Error('Token is missing');
             }
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            const response = await axiosInstance.put(`api/users/unfollow/${userId}`);
+            const response = await axiosInstance.get(`api/users/follow/${userId}`);
             return response.data;
         } catch (error) {
-            console.error("Unfollow user error:", error.response?.data || error.message);
+            console.error("Follow user error:", error.response?.data || error.message);
             throw error;
         }
     },
+
+    // // Unfollow một người dùng
+    // async unfollowUser(userId) {
+    //     try {
+    //         const token = await AsyncStorage.getItem('token');
+    //         if (!token) {
+    //             throw new Error('Token is missing');
+    //         }
+    //         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    //         const response = await axiosInstance.put(`api/users/unfollow/${userId}`);
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error("Unfollow user error:", error.response?.data || error.message);
+    //         throw error;
+    //     }
+    // },
     // Lấy thông tin người dùng theo ID
     async getUserById(userId) {
         try {

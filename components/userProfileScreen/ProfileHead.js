@@ -83,7 +83,7 @@ const ProfileHead = ({ viewMode }) => {
     );
   }
 
-  const handleEditPress = () => {
+  const handleChat = () => {
     if (viewMode) {
       // Nếu ở chế độ xem, chuyển hướng tới tin nhắn
       navigation.navigate("MessagesScreen");
