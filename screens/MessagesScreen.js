@@ -4,10 +4,31 @@ import InputField from "../components/InputField";
 import MessageCard from "../components/messagesScreen/MessageCard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GlobalStyles } from "../constants/Styles";
+import { Use } from "react-native-svg";
+import userService from "../src/services/user.service";
 
 const MessagesScreen = ({ navigation, route }) => {
   const [search, setSearch] = useState("");
   const [paddingTop, setPaddingTop] = useState(0);
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await userService.getAll();
+        const user = await userService.getUserProfile();
+
+        // xóa user hiện tại ra khỏi danh sách response
+        const index = response.findIndex((item) => item.id === user.id);
+        response.splice(index, 1);
+ 
+        setUsers(response); // Cập nhật state với dữ liệu người dùng
+      } catch (error) {
+        console.error("Error fetching users", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -37,17 +58,18 @@ const MessagesScreen = ({ navigation, route }) => {
       </View>
 
       <FlatList
-        data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]}
-        keyExtractor={(item, index) => index.toString()}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingTop: paddingTop,
-          paddingBottom: GlobalStyles.styles.tabBarPadding,
-        }}
-        renderItem={({ item, index }) => {
-          return <MessageCard />;
-        }}
-      />
+         data={users} // Truyền danh sách người dùng vào FlatList
+         keyExtractor={(item, index) => item.id.toString()} // Giả sử mỗi người dùng có id duy nhất
+         showsVerticalScrollIndicator={false}
+         contentContainerStyle={{
+           paddingTop: paddingTop,
+           paddingBottom: GlobalStyles.styles.tabBarPadding,
+         }}
+         renderItem={({ item, index }) => {
+
+           return <MessageCard item={item} />; // Truyền mỗi người dùng vào MessageCard
+         }}
+       />
     </SafeAreaView>
   );
 };
