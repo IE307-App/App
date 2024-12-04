@@ -7,20 +7,24 @@ import {
   Pressable,
   ImageBackground,
 } from "react-native";
-import React, { useContext } from "react";
-
+import React, { useContext, useEffect } from "react";
+import Ionicons from 'react-native-vector-icons/Ionicons';  // Import icon library
 import { useNavigation } from "@react-navigation/native";
 import { GlobalStyles, DEFAULT_DP } from "../../constants/Styles.js";
 import PressEffect from "../UI/PressEffect.js";
 import { AuthContext } from "../../store/auth-context.js";
+import userService from "../../src/services/user.service.js";
 
 const OtherProfileHead = ({ userData, viewMode }) => {
 
   const [profilePic, setProfilePic] = React.useState(
     userData && userData.imageURL ? userData.imageURL : DEFAULT_DP
   );
+  const [isFollowed, setIsFollowed] = React.useState(false);
   const navigation = useNavigation();
-  const { logout } = useContext(AuthContext);
+  useEffect(() => {
+    setIsFollowed(userService.checkFollowUser(userData._id));
+  }, []);
   function ProfileStat({ text, subText, onPress }) {
     return (
       <Pressable style={{ alignItems: "center" }} onPress={onPress}>
@@ -33,22 +37,24 @@ const OtherProfileHead = ({ userData, viewMode }) => {
       </Pressable>
     );
   }
-  const checkFollowed = () => {
-    // Kiểm tra xem người dùng đã theo dõi chưa
-    
-    // Phải thêm code này vào hàm checkFollowed để thực hiện kiểm tra
-  };
   const handleChat = () => {
     if (viewMode) {
-      // Nếu ở chế độ xem, chuyển hướng tới tin nhắn
       navigation.navigate("MessagesScreen");
     } else {
-      // Nếu không ở chế độ xem, thực hiện logout
-      logout();
       navigation.navigate("LoginScreen"); // Sau khi logout, chuyển hướng đến màn hình đăng nhập
     }
   };
   const handleFollow = (userData) => {
+    try {
+      const response = userService.followUser(userData._id);
+      if (response.status === 200) {
+        setIsFollowed(userService.checkFollowUser(userData._id));
+      } else {
+        console.error("Loi khi theo dõi người dùng:");
+      }
+    } catch (error) {
+      console.error("Lỗi khi theo dõi người dùng:");
+    }
 
     
   };
@@ -62,72 +68,40 @@ const OtherProfileHead = ({ userData, viewMode }) => {
           margin: 10,
         }}
       >
-        <ImageBackground
-          style={{
-            width: 150,
-            height: 150,
-
-            marginHorizontal: 10,
-          }}
-          imageStyle={{
-            borderRadius: 100,
-          }}
-          source={{ uri: profilePic }}
-        >
-          <View
-            style={{
-              position: "absolute",
-              right: 0,
-              bottom: 5,
-            }}
-          >
-            <PressEffect
-              style={{
-                backgroundColor: GlobalStyles.colors.primary300,
-                padding: 10,
-                borderRadius: 50,
-              }}
-            >
-              <Pressable
-                onPress={() => {
-                  if (!viewMode) navigation.navigate("EditProfileScreen");
-                }}
-              >
-                <Image
-                  source={
-                    viewMode
-                      ? require("../../assets/add-friend.png")
-                      : require("../../assets/edit.png")
-                  }
-                  style={{ width: 25, height: 25, tintColor: "white" }}
-                />
-              </Pressable>
-            </PressEffect>
-          </View>
-          {viewMode && (
+        {/* Follow Button */}
+        <View style={{ alignItems: "center", marginTop: 10 }}>
+          <Pressable onPress={handleFollow}>
             <View
               style={{
-                position: "absolute",
-                left: 0,
-                top: 5,
-                transform: [{ rotateY: "180deg" }],
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: isFollowed
+                  ? GlobalStyles.colors.secondary300
+                  : GlobalStyles.colors.primary300,
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                borderRadius: 20,
               }}
             >
-              <PressEffect>
-                <Pressable
-                  onPress={() => {
-                    navigation.navigate("MessagesScreen");
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/chat-focused.png")}
-                    style={{ width: 30, height: 30, tintColor: "white" }}
-                  />
-                </Pressable>
-              </PressEffect>
+              <Ionicons
+                name={isFollowed ? "user-following" : "user-follow"}  // Chọn icon tương ứng
+                size={20}
+                color="white"
+                style={{ marginRight: 8 }}
+              />
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                {isFollowed ? "Unfollow" : "Follow"}
+              </Text>
             </View>
-          )}
-        </ImageBackground>
+          </Pressable>
+        </View>
+
         <Text
           style={{
             fontWeight: "bold",
