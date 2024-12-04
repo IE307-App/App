@@ -9,27 +9,30 @@ export const AuthContext = createContext({
   isAuthenticated: false,
   authenticate: (userData) => {},
   logout: () => {},
+  addNotification: () => {},
+  notifications: [],
 });
 
 const ApiUrl = serverLink;
 
 function AuthContentProvider({ children }) {
-  const [userData, setUserData] = useState(null); 
+  const [userData, setUserData] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [notifications, setNotifications] = useState([]); // Danh sách thông báo
 
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const token = await AsyncStorage.getItem("token"); 
+        const token = await AsyncStorage.getItem("token");
         if (token) {
-          setIsAuthenticated(true); 
+          setIsAuthenticated(true);
           const responseUserData = await axios.get(ApiUrl + "/api/users/profile", {
             headers: {
-              Authorization: `Bearer ${token}`, 
+              Authorization: `Bearer ${token}`,
             },
           });
-          await AsyncStorage.setItem("userData", JSON.stringify(responseUserData.data)); 
-          setUserData(responseUserData.data); 
+          await AsyncStorage.setItem("userData", JSON.stringify(responseUserData.data));
+          setUserData(responseUserData.data);
         }
       } catch (error) {
         console.error("Lỗi khi kiểm tra trạng thái xác thực:", error);
@@ -42,8 +45,8 @@ function AuthContentProvider({ children }) {
   const authenticate = async (userData) => {
     try {
       setIsAuthenticated(true);
-      setUserData(userData); 
-      await AsyncStorage.setItem("userData", JSON.stringify(userData)); 
+      setUserData(userData);
+      await AsyncStorage.setItem("userData", JSON.stringify(userData));
     } catch (error) {
       console.error("Lỗi khi xác thực:", error);
     }
@@ -55,16 +58,30 @@ function AuthContentProvider({ children }) {
       setIsAuthenticated(false);
       await AsyncStorage.removeItem("userData");
       await AsyncStorage.removeItem("token");
-      console.log("Đã đăng xuất");
     } catch (error) {
       console.error("Lỗi khi đăng xuất:", error);
     }
   };
 
+  // Hàm cập nhật thông tin người dùng
   const updateUserData = (newData) => {
     setUserData((prevData) => {
-      return { ...prevData, ...newData }; // Kết hợp dữ liệu mới với dữ liệu người dùng hiện tại
+      return { ...prevData, ...newData };
     });
+  };
+
+  // Hàm thêm thông báo vào danh sách
+  const addNotification = (message) => {
+    setNotifications((prevNotifications) => [
+      ...prevNotifications,
+      { id: new Date().getTime(), message }, // Tạo id duy nhất bằng timestamp
+    ]);
+  };
+
+  // Hàm theo dõi người dùng
+  const handleFollowUser = (followerName) => {
+    // Thêm thông báo khi có người theo dõi
+    addNotification(`${followerName} đã theo dõi bạn!`);
   };
 
   const value = {
@@ -73,6 +90,9 @@ function AuthContentProvider({ children }) {
     authenticate: authenticate,
     logout: logout,
     updateUserData: updateUserData,
+    notifications: notifications, // Truyền danh sách thông báo
+    addNotification: addNotification, // Hàm để thêm thông báo
+    handleFollowUser: handleFollowUser, // Hàm theo dõi người dùng
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

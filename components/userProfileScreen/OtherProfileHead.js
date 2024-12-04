@@ -6,7 +6,7 @@ import {
   Pressable,
   ImageBackground,
 } from "react-native";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import Ionicons from 'react-native-vector-icons/Ionicons';  
 import { useNavigation } from "@react-navigation/native";
 import { GlobalStyles, DEFAULT_DP } from "../../constants/Styles.js";
@@ -15,11 +15,14 @@ import { AuthContext } from "../../store/auth-context.js";
 import userService from "../../src/services/user.service.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect
-
+import notificationService from "../../src/services/notification.service.js";
+import NotificationDto from "../../src/types/dto/notification.dto.js";
 const OtherProfileHead = ({ userData, viewMode }) => {
   const [profilePic, setProfilePic] = useState(userData && userData.imageURL ? userData.imageURL : DEFAULT_DP);
   const [isFollowed, setIsFollowed] = useState(false);
   const navigation = useNavigation();
+  const { userData: updatedUserData, updateUserData } = useContext(AuthContext); // Lấy userData từ context
+ 
 
   const getFollowStatus = useCallback(async () => {
     try {
@@ -41,16 +44,35 @@ const OtherProfileHead = ({ userData, viewMode }) => {
     }, [getFollowStatus])
   );
 
+  const sendNotification = () => {
+    const notificationDto = new NotificationDto(
+      "You have a new follower by " + updatedUserData.name  ,
+      "FOLLOW",
+      false,
+      updatedUserData.id,
+      userData.id
+    );
+    notificationService.createNotification(notificationDto);
+  };
+
   const handleChat = () => {
     navigation.navigate("ChatScreen", { userId: userData.id })
   };
 
-  const handleFollow = async () => {
+  const handleFollow =  () => {
     try {
       const newFollowStatus = !isFollowed;  // Đảo trạng thái follow
-      await userService.followUser(userData.id, newFollowStatus); // Gọi API để follow/unfollow
+       userService.followUser(userData.id, newFollowStatus); // Gọi API để follow/unfollow
       setIsFollowed(newFollowStatus);  // Cập nhật trạng thái local
-      await AsyncStorage.setItem(`followed-${userData.id}`, JSON.stringify(newFollowStatus));
+       AsyncStorage.setItem(`followed-${userData.id}`, JSON.stringify(newFollowStatus));
+      console.log(newFollowStatus ? "Followed user" : "Unfollowed user");
+      console.log(updatedUserData.id )
+
+      if (newFollowStatus) {
+        sendNotification();  // Gửi thông báo khi follow thành công
+        console.log("Success ---------------------");
+
+      }
     } catch (error) {
       console.error("Lỗi khi theo dõi người dùng:", error);
     }
